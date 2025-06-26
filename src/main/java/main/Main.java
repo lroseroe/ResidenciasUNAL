@@ -1,15 +1,23 @@
 package main;
 
 import estructuras.MinHeap;
+import javax.swing.JFrame;
 
 public class Main {
+    public static JFrame ventana = new JFrame();
+    
     public static void main(String[] args) {
-        MinHeap<Integer> heap = new MinHeap<>(10);
-        heap.insert(7);
-        heap.insert(10);
-        heap.insert(4);
+        ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ventana.setResizable(false);
+        ventana.setTitle("Sistema de Residencias");
         
-        heap.print();
+        MainPanel panel = new MainPanel();
+        ventana.add(panel);
+
+        ventana.pack();
+        ventana.setLocationRelativeTo(null);
+        ventana.setVisible(true);
+       
     }
 }
 
