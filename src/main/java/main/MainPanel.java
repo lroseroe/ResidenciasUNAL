@@ -11,8 +11,9 @@ public class MainPanel extends JPanel{
     final int screenCol = 24;
     final int screenRow = 14;
     
-    final int screenWidth = screenCol * tile;
-    final int screenHeight = screenRow * tile;
+    //Proporción 16:9 (Casi) 
+    final int screenWidth = screenCol * tile; //1152 px
+    final int screenHeight = screenRow * tile; //672
     
     //Distintas pantallas del sistema
     int currentScreen;

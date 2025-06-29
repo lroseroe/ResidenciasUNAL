@@ -3,8 +3,10 @@ package main;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class UI{
@@ -12,9 +14,20 @@ public class UI{
     Graphics2D grafica;
     Font defaultFont;
     
+    BufferedImage mainScreenImage;
+    
     public UI(MainPanel panel){
         this.panel = panel;
-        defaultFont = new Font("Bahnschrift Light", Font.PLAIN, 16);
+        
+        //Cargar imagenes
+        try{
+            InputStream archivoFuente = getClass().getResourceAsStream("/Kanit-Regular.ttf");
+            defaultFont = Font.createFont(Font.TRUETYPE_FONT, archivoFuente);
+            
+            mainScreenImage = ImageIO.read(getClass().getResourceAsStream("/mainScreen.png"));
+        } catch(FontFormatException | IOException e){
+            e.printStackTrace();
+        }
         
         drawTextFields();
         drawButtons();
@@ -23,11 +36,11 @@ public class UI{
     public void draw(Graphics2D grafica){
         this.grafica = grafica;
         
-        grafica.setFont(new Font("Bahnschrift Light", Font.PLAIN, 20));
+        grafica.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
         grafica.setColor(Color.white);
         
         if(panel.currentScreen == panel.mainScreen){
-            drawMainScreen();
+            grafica.drawImage(mainScreenImage, 0, 0, null);
         } else if(panel.currentScreen == panel.menuScreen){
             drawMenuScreen();
         }
@@ -50,13 +63,13 @@ public class UI{
         //Pantalla de inicio
         if(panel.currentScreen == panel.mainScreen){
             JButton login = new JButton("Ingresar");
-            login.setBounds(getXforCenteredRect(panel.tile * 3), panel.tile * 19/2, panel.tile * 3, panel.tile * 3/4);
-            login.setFont(defaultFont.deriveFont(Font.BOLD, 17F));
+            login.setBounds(panel.tile * 71/4, panel.tile * 9, panel.tile * 3, panel.tile * 3/4);
+            login.setFont(defaultFont.deriveFont(Font.BOLD, 20F));
             login.setForeground(Color.white);
             login.setFocusPainted(false);
             login.setBorderPainted(false);
             login.setContentAreaFilled(true);
-            login.setBackground(new Color(245, 52, 59)); //Rojo más claro
+            login.setBackground(new Color(153, 43, 43)); //Rojo
             login.addMouseListener(new CurrentScreenControler(panel, 1)); //Para avanzar a la siguiente pantalla
             panel.add(login);
         }
@@ -66,15 +79,15 @@ public class UI{
         //Pantalla de inicio
         if(panel.currentScreen == panel.mainScreen){
             JTextField userBox = new JTextField(40);
-            userBox.setBounds(panel.tile * 9 , panel.tile * 7, panel.tile * 6, panel.tile * 3/4);
-            userBox.setFont(defaultFont);
-            addPlaceholder(userBox, "Ingrese su usuario");
+            userBox.setBounds(panel.tile * 65/4 , panel.tile * 5, panel.tile * 47/8, panel.tile * 3/4);
+            userBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(userBox, "  Ingrese su usuario");
             panel.add(userBox);
 
             JTextField passwordBox = new JTextField(40);
-            passwordBox.setBounds(panel.tile * 9 , panel.tile * 8, panel.tile * 6, panel.tile * 3/4);
-            passwordBox.setFont(defaultFont);
-            addPlaceholder(passwordBox, "Ingrese su contraseña");
+            passwordBox.setBounds(panel.tile * 65/4 , panel.tile * 13/2, panel.tile * 47/8, panel.tile * 3/4);
+            passwordBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(passwordBox, "  Ingrese su contraseña");
             panel.add(passwordBox);
         } 
 
@@ -84,35 +97,7 @@ public class UI{
         grafica.drawString("Test", 100, 400);
     }
     
-    public void drawMainScreen(){
-        grafica.setColor(Color.white);
-        grafica.fillRect(0, 0, panel.screenWidth, panel.screenHeight);
-        grafica.setFont(grafica.getFont().deriveFont(Font.BOLD, 70F)); //Cambiar el tamaño actual de la fuente
-        String text = "SISTEMA DE RESIDENCIAS";
-        int x = getXforCenteredText(text);
-        int y = panel.tile * 5;
-        
-        grafica.setColor(Color.black);
-        grafica.drawString(text, x, y);
-        
-        x = getXforCenteredRect(panel.tile * 8);
-        y += panel.tile;
-        
-        grafica.setColor(new Color(179, 35, 41)); //Rojo
-        grafica.fillRoundRect(x, y, panel.tile * 8, panel.tile * 5, 40, 40);
-        
-        grafica.setColor(new Color(158, 25, 30)); //Rojo
-        grafica.fillRect(0, panel.tile, panel.tile * 24, panel.tile * 3/2);
-        
-        grafica.setColor(new Color(130, 130, 130)); //Gris
-        grafica.fillRect(0, 0, panel.tile * 24, panel.tile );
-        
-        grafica.setColor(new Color(74, 74, 74)); //Gris
-        grafica.fillRect(panel.tile * 2, 0, panel.tile * 7, panel.tile * 3);
 
-    }
-    
-    
     //Métodos auxiliares 
     
      public static void addPlaceholder(JTextField box, String placeholder) {
