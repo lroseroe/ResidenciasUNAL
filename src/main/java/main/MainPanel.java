@@ -19,7 +19,12 @@ public class MainPanel extends JPanel{
     int currentScreen;
     final int mainScreen = 0;
     final int menuScreen = 1;
-    final int totalScreens = 5;
+    final int studentInfoScreen = 2;
+    final int residenceAvailabilityScreen = 3;
+    final int asignationInfoScreen = 4;
+    final int editAsignationScreen = 5;
+    final int systemInfoScreen = 6;
+    final int totalScreens = 7;
     
     //Aqui se debería inicializar todo lo del programa principal 
     
@@ -44,10 +49,9 @@ public class MainPanel extends JPanel{
         System.out.println("screen: " + currentScreen);
     }
     
-    public void changeScreen(int direc){
-        int newScreen = currentScreen + direc;
-        if(newScreen >= 0 && newScreen < totalScreens){
-            currentScreen = newScreen;
+    public void changeScreen(int screen){
+        if(screen >= 0 && screen < totalScreens){
+            currentScreen = screen;
         }
         
         interfaz.updateScreen();
