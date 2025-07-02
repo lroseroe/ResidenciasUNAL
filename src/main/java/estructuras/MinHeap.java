@@ -83,7 +83,7 @@ public class MinHeap<T extends Comparable<T>>{
     
     public void changePriority(int i, T item){
         T oldItem = array[i];
-        array[i] = item;
+        array[i] = item; //Item es la prioridad
         if(item.compareTo(oldItem) > 0){
             siftUp(i);
         } else {

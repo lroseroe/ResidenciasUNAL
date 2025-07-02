@@ -18,6 +18,34 @@ public class UI{
     BufferedImage mainScreenImage;
     BufferedImage defaultMenuScreenImage;
     BufferedImage menuScreenImage;
+    BufferedImage profileImage;
+    
+    //----------- Botones para cada acción ---------
+    //studentInfoScreen
+    JButton searchBtn; //Buscar un estudiante con ID
+    JButton removeStudentBtn; //Remover estudiante del sistema
+    JButton editScoreBtn; //Editar su puntaje socioeconomico
+    
+    //residenceAvailabilityScreen
+    JButton editNumPlacesBtn; //Editar cantidad de cupos total
+    JButton checkAvailabiltyBtn; //Revisar cantidad de cupos disponibles
+    
+    //asignationInfoScreen
+    JButton listStudentsBtn; //Listar estudiantes con y sin cupo obtenido
+    
+    //editAsignationScreen
+    JButton addStudentBtn; //Registrar estudiante al sistema
+    
+    //Cajas de texto para recibir información del usuario
+    JTextField searchBox; //Recibir el ID del estudiante para buscarlo
+    JTextField editNumPlacesBox; //Ingresar el nuevo limite de cupos
+    //Datos del estudiante al agregarlo
+    JTextField studentFirstNameBox; 
+    JTextField studentSecondNameBox;
+    JTextField studentFirstLastNameBox;
+    JTextField studentSecondLastNameBox;
+    JTextField studentIDBox;
+    JTextField studentScoreBox;
     
     public UI(MainPanel panel){
         this.panel = panel;
@@ -30,6 +58,7 @@ public class UI{
             mainScreenImage = ImageIO.read(getClass().getResourceAsStream("/mainScreen.png"));
             defaultMenuScreenImage = ImageIO.read(getClass().getResourceAsStream("/defaultMenuScreen.png"));
             menuScreenImage = ImageIO.read(getClass().getResourceAsStream("/menuScreen.png"));
+            profileImage = ImageIO.read(getClass().getResourceAsStream("/profile.png"));
             
         } catch(FontFormatException | IOException e){
             e.printStackTrace();
@@ -37,6 +66,7 @@ public class UI{
         
         drawTextFields();
         drawButtons();
+        drawLabels();
     }
     
     public void draw(Graphics2D grafica){
@@ -51,6 +81,9 @@ public class UI{
             grafica.drawImage(defaultMenuScreenImage, 0, 0, null);
         } else {
             grafica.drawImage(menuScreenImage, 0, 0, null);
+            if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound){
+                grafica.drawImage(profileImage, panel.tile * 8, panel.tile * 5, null);
+            }
         }
     }
     
@@ -65,6 +98,62 @@ public class UI{
         
         drawTextFields();
         drawButtons();
+        drawLabels();
+    }
+    
+    public void drawLabels(){
+        if(panel.mouseCtrl.searchBtnPressed){
+            if(!panel.mouseCtrl.studentFound){
+                JLabel notFoundText = new JLabel("Estudiante no encontrado.");
+                notFoundText.setBounds(panel.tile * 8, panel.tile * 5, panel.tile * 10, panel.tile * 3/4);
+                notFoundText.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                notFoundText.setForeground(Color.black);
+                notFoundText.setBackground(Color.white);
+                panel.add(notFoundText);
+            } else {
+                JLabel nameText = new JLabel("Nombre: ");
+                nameText.setBounds(panel.tile * 14, panel.tile * 5, panel.tile * 10, panel.tile * 3/4);
+                nameText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                nameText.setForeground(Color.black);
+                nameText.setBackground(Color.white);
+                panel.add(nameText);
+                
+                JLabel nameFilledText = new JLabel("###### ####### ####### #########");
+                nameFilledText.setBounds(panel.tile * 14, panel.tile * 11/2, panel.tile * 10, panel.tile * 3/4);
+                nameFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                nameFilledText.setForeground(Color.gray);
+                nameFilledText.setBackground(Color.white);
+                panel.add(nameFilledText);
+                
+                JLabel IDText = new JLabel("ID: ");
+                IDText.setBounds(panel.tile * 14, panel.tile * 6, panel.tile * 10, panel.tile * 3/4);
+                IDText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                IDText.setForeground(Color.black);
+                IDText.setBackground(Color.white);
+                panel.add(IDText);
+                
+                JLabel IDFilledText = new JLabel("############");
+                IDFilledText.setBounds(panel.tile * 14, panel.tile * 13/2, panel.tile * 10, panel.tile * 3/4);
+                IDFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                IDFilledText.setForeground(Color.gray);
+                IDFilledText.setBackground(Color.white);
+                panel.add(IDFilledText);
+                
+                JLabel ScoreText = new JLabel("Puntaje socioeconómico: ");
+                ScoreText.setBounds(panel.tile * 14, panel.tile * 7, panel.tile * 10, panel.tile * 3/4);
+                ScoreText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                ScoreText.setForeground(Color.black);
+                ScoreText.setBackground(Color.white);
+                panel.add(ScoreText);
+                
+                JLabel ScoreFilledText = new JLabel("####");
+                ScoreFilledText.setBounds(panel.tile * 14, panel.tile * 15/2, panel.tile * 10, panel.tile * 3/4);
+                ScoreFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                ScoreFilledText.setForeground(Color.gray);
+                ScoreFilledText.setBackground(Color.white);
+                panel.add(ScoreFilledText);
+            }
+        }
     }
     
     public void drawButtons(){
@@ -139,6 +228,42 @@ public class UI{
             panel.add(option5);
             
             //Otras opciones
+            if(panel.currentScreen == panel.studentInfoScreen){
+                searchBtn = new JButton("Buscar estudiante");
+                searchBtn.setBounds(panel.tile * 8, panel.tile * 4, panel.tile * 4, panel.tile * 3/4);
+                searchBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                searchBtn.setForeground(Color.white);
+                searchBtn.setFocusPainted(false);
+                searchBtn.setBorder(lineBorder);
+                searchBtn.setContentAreaFilled(true);
+                searchBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                searchBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(searchBtn);
+                
+                if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound){
+                    removeStudentBtn = new JButton("Eliminar estudiante");
+                    removeStudentBtn.setBounds(panel.tile * 14, panel.tile * 10, panel.tile * 4, panel.tile * 3/4);
+                    removeStudentBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                    removeStudentBtn.setForeground(Color.white);
+                    removeStudentBtn.setFocusPainted(false);
+                    removeStudentBtn.setBorder(lineBorder);
+                    removeStudentBtn.setContentAreaFilled(true);
+                    removeStudentBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                    removeStudentBtn.addMouseListener(panel.mouseCtrl); 
+                    panel.add(removeStudentBtn);
+                    
+                    editScoreBtn = new JButton("Editar puntaje");
+                    editScoreBtn.setBounds(panel.tile * 37/2, panel.tile * 10, panel.tile * 4, panel.tile * 3/4);
+                    editScoreBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                    editScoreBtn.setForeground(Color.white);
+                    editScoreBtn.setFocusPainted(false);
+                    editScoreBtn.setBorder(lineBorder);
+                    editScoreBtn.setContentAreaFilled(true);
+                    editScoreBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                    editScoreBtn.addMouseListener(panel.mouseCtrl); 
+                    panel.add(editScoreBtn);
+                }
+            }
         }
     }
     
@@ -156,7 +281,13 @@ public class UI{
             passwordBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
             addPlaceholder(passwordBox, "  Ingrese su contraseña");
             panel.add(passwordBox);
-        } 
+        } else if(panel.currentScreen == panel.studentInfoScreen){
+            searchBox = new JTextField(40);
+            searchBox.setBounds(panel.tile * 8 , panel.tile * 3, panel.tile * 47/8, panel.tile * 3/4);
+            searchBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(searchBox, "  Ingrese el ID del estudiante");
+            panel.add(searchBox);
+        }
 
     }
     

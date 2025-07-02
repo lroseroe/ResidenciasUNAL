@@ -28,6 +28,7 @@ public class MainPanel extends JPanel{
     
     //Aqui se debería inicializar todo lo del programa principal 
     
+    MouseController mouseCtrl = new MouseController(this);
     UI interfaz = new UI(this);
             
     public MainPanel(){
@@ -46,7 +47,6 @@ public class MainPanel extends JPanel{
         super.paintComponent(g);  
         Graphics2D g2 = (Graphics2D) g;
         interfaz.draw(g2); 
-        System.out.println("screen: " + currentScreen);
     }
     
     public void changeScreen(int screen){
@@ -54,6 +54,7 @@ public class MainPanel extends JPanel{
             currentScreen = screen;
         }
         
+        mouseCtrl.searchBtnPressed = false;
         interfaz.updateScreen();
     }
 }
