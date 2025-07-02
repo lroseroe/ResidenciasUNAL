@@ -1,0 +1,55 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ */
+
+package com.mycompany.residenciasunalhash;
+
+/**
+ *
+ * @author Jthom
+ */
+import java.util.Scanner;
+
+
+public class Estudiante{
+    long id;
+    String nombre;
+    int puntaje;
+    boolean tieneApoyo;
+
+    public Estudiante(){
+        this.id=9999999999L;
+        this.nombre="XXXXXX XXXXX XXXXXX XXXXX";
+        this.puntaje=0;
+        this.tieneApoyo=0;
+    }
+
+    public Estudiante(long id, String nombre, int puntaje){
+        this.id=id;
+        this.nombre=nombre;
+        this.puntaje=puntaje;
+        this.tieneApoyo=false;
+    }
+
+    public String getNombre(){
+        return this.nombre;
+    }
+
+
+    public void setPuntaje(int n){
+        this.puntaje=n;
+    }
+    public int getPuntaje(){
+        return this.puntaje;
+    }
+
+    public void setApoyo(boolean b){
+        this.tieneApoyo=b;
+    }
+
+    public boolean getApoyo(){
+        return this.tieneApoyo;
+    }
+
+
+}
