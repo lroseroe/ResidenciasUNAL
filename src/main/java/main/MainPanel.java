@@ -26,6 +26,11 @@ public class MainPanel extends JPanel{
     final int systemInfoScreen = 6;
     final int totalScreens = 7;
     
+    
+    public int totalResidences; //Cupos totales
+    public int takenResidences; //Está variable debe cambiar cada que se asigne un cupo  
+    public int availableResidences;  //Actualizar esto también
+    
     //Aqui se debería inicializar todo lo del programa principal 
     
     MouseController mouseCtrl = new MouseController(this);
@@ -39,7 +44,9 @@ public class MainPanel extends JPanel{
         this.setLayout(null);
         
         currentScreen = mainScreen;
-
+        totalResidences = 500;
+        takenResidences = 0;
+        availableResidences = totalResidences - takenResidences;
     }
     
     @Override
@@ -55,6 +62,11 @@ public class MainPanel extends JPanel{
         }
         
         mouseCtrl.searchBtnPressed = false;
+        mouseCtrl.checkAvailabiltyBtnPressed = false;
+        mouseCtrl.editNumPlacesBtnPressed = false;
+        mouseCtrl.listStudentsBtnPressed = false;
+        mouseCtrl.addStudentBtnPressed = false;
+        
         interfaz.updateScreen();
     }
 }

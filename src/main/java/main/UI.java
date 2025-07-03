@@ -29,6 +29,7 @@ public class UI{
     //residenceAvailabilityScreen
     JButton editNumPlacesBtn; //Editar cantidad de cupos total
     JButton checkAvailabiltyBtn; //Revisar cantidad de cupos disponibles
+    JButton confirmEditingBtn; 
     
     //asignationInfoScreen
     JButton listStudentsBtn; //Listar estudiantes con y sin cupo obtenido
@@ -38,12 +39,10 @@ public class UI{
     
     //Cajas de texto para recibir información del usuario
     JTextField searchBox; //Recibir el ID del estudiante para buscarlo
-    JTextField editNumPlacesBox; //Ingresar el nuevo limite de cupos
+
     //Datos del estudiante al agregarlo
-    JTextField studentFirstNameBox; 
-    JTextField studentSecondNameBox;
-    JTextField studentFirstLastNameBox;
-    JTextField studentSecondLastNameBox;
+    JTextField studentNamesBox; 
+    JTextField studentLastNamesBox;
     JTextField studentIDBox;
     JTextField studentScoreBox;
     
@@ -153,6 +152,48 @@ public class UI{
                 ScoreFilledText.setBackground(Color.white);
                 panel.add(ScoreFilledText);
             }
+        } else if(panel.mouseCtrl.checkAvailabiltyBtnPressed){
+            JLabel availabilityText = new JLabel("Hay " + panel.availableResidences + " cupos disponibles.");
+            availabilityText.setBounds(panel.tile * 8, panel.tile * 4, panel.tile * 10, panel.tile * 3/4);
+            availabilityText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            availabilityText.setForeground(Color.black);
+            availabilityText.setBackground(Color.white);
+            panel.add(availabilityText);
+        } else if(panel.currentScreen == panel.systemInfoScreen){
+            JLabel creditsText = new JLabel("Programa creado por: ");
+            creditsText.setBounds(panel.tile * 8, panel.tile * 3, panel.tile * 10, panel.tile * 3/4);
+            creditsText.setFont(defaultFont.deriveFont(Font.BOLD, 16F));
+            creditsText.setForeground(Color.black);
+            creditsText.setBackground(Color.white);
+            panel.add(creditsText);
+            
+            JLabel creditsText1 = new JLabel("Juan Thomas Contreras Pinzón");
+            creditsText1.setBounds(panel.tile * 8, panel.tile * 4, panel.tile * 10, panel.tile * 3/4);
+            creditsText1.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            creditsText1.setForeground(Color.black);
+            creditsText1.setBackground(Color.white);
+            panel.add(creditsText1);
+            
+            JLabel creditsText2 = new JLabel("Sara Valentina Fajardo Lombana");
+            creditsText2.setBounds(panel.tile * 8, panel.tile * 5, panel.tile * 10, panel.tile * 3/4);
+            creditsText2.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            creditsText2.setForeground(Color.black);
+            creditsText2.setBackground(Color.white);
+            panel.add(creditsText2);
+            
+            JLabel creditsText3 = new JLabel("Luisa María Rosero Espinosa");
+            creditsText3.setBounds(panel.tile * 8, panel.tile * 6, panel.tile * 10, panel.tile * 3/4);
+            creditsText3.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            creditsText3.setForeground(Color.black);
+            creditsText3.setBackground(Color.white);
+            panel.add(creditsText3);
+            
+            JLabel creditsText4 = new JLabel("* Imagenes tomadas de Freepik");
+            creditsText4.setBounds(panel.tile * 8, panel.tile * 10, panel.tile * 10, panel.tile * 3/4);
+            creditsText4.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            creditsText4.setForeground(Color.black);
+            creditsText4.setBackground(Color.white);
+            panel.add(creditsText4);
         }
     }
     
@@ -205,7 +246,7 @@ public class UI{
             option3.addMouseListener(new CurrentScreenControler(panel, panel.asignationInfoScreen)); 
             panel.add(option3);
             
-            JButton option4 = new JButton("Editar asignación");
+            JButton option4 = new JButton("Agregar asignación");
             option4.setBounds(0, panel.tile * 5, panel.tile * 7, panel.tile);
             option4.setFont(defaultFont.deriveFont(Font.PLAIN, 20F));
             option4.setForeground(Color.white);
@@ -262,7 +303,51 @@ public class UI{
                     editScoreBtn.setBackground(new Color(153, 43, 43)); //Rojo
                     editScoreBtn.addMouseListener(panel.mouseCtrl); 
                     panel.add(editScoreBtn);
-                }
+                } 
+            } else if(panel.currentScreen == panel.residenceAvailabilityScreen){
+                checkAvailabiltyBtn = new JButton("Ver cupos disponibles");
+                checkAvailabiltyBtn.setBounds(panel.tile * 8, panel.tile * 3, panel.tile * 5, panel.tile * 3/4);
+                checkAvailabiltyBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                checkAvailabiltyBtn.setForeground(Color.white);
+                checkAvailabiltyBtn.setFocusPainted(false);
+                checkAvailabiltyBtn.setBorder(lineBorder);
+                checkAvailabiltyBtn.setContentAreaFilled(true);
+                checkAvailabiltyBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                checkAvailabiltyBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(checkAvailabiltyBtn);
+                
+                editNumPlacesBtn = new JButton("Editar total de cupos");
+                editNumPlacesBtn.setBounds(panel.tile * 8, panel.tile * 5, panel.tile * 5, panel.tile * 3/4);
+                editNumPlacesBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                editNumPlacesBtn.setForeground(Color.white);
+                editNumPlacesBtn.setFocusPainted(false);
+                editNumPlacesBtn.setBorder(lineBorder);
+                editNumPlacesBtn.setContentAreaFilled(true);
+                editNumPlacesBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                editNumPlacesBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(editNumPlacesBtn);
+            } else if(panel.currentScreen == panel.asignationInfoScreen){
+                listStudentsBtn = new JButton("Mostrar asignaciones");
+                listStudentsBtn.setBounds(panel.tile * 8, panel.tile * 3, panel.tile * 5, panel.tile * 3/4);
+                listStudentsBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                listStudentsBtn.setForeground(Color.white);
+                listStudentsBtn.setFocusPainted(false);
+                listStudentsBtn.setBorder(lineBorder);
+                listStudentsBtn.setContentAreaFilled(true);
+                listStudentsBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                listStudentsBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(listStudentsBtn);
+            } else if(panel.currentScreen == panel.editAsignationScreen){
+                addStudentBtn = new JButton("Agregar estudiante");
+                addStudentBtn.setBounds(panel.tile * 8, panel.tile * 7, panel.tile * 4, panel.tile * 3/4);
+                addStudentBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                addStudentBtn.setForeground(Color.white);
+                addStudentBtn.setFocusPainted(false);
+                addStudentBtn.setBorder(lineBorder);
+                addStudentBtn.setContentAreaFilled(true);
+                addStudentBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                addStudentBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(addStudentBtn);
             }
         }
     }
@@ -287,8 +372,31 @@ public class UI{
             searchBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
             addPlaceholder(searchBox, "  Ingrese el ID del estudiante");
             panel.add(searchBox);
+        } else if(panel.currentScreen == panel.editAsignationScreen){
+            studentNamesBox = new JTextField(40);
+            studentNamesBox.setBounds(panel.tile * 8 , panel.tile * 3, panel.tile * 8, panel.tile * 3/4);
+            studentNamesBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(studentNamesBox, "  Ingrese el/los nombre(s) del estudiante");
+            panel.add(studentNamesBox);
+            
+            studentLastNamesBox = new JTextField(40);
+            studentLastNamesBox.setBounds(panel.tile * 8 , panel.tile * 4, panel.tile * 8, panel.tile * 3/4);
+            studentLastNamesBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(studentLastNamesBox, "  Ingrese el/los apellido(s) del estudiante");
+            panel.add(studentLastNamesBox);
+            
+            studentIDBox = new JTextField(40);
+            studentIDBox.setBounds(panel.tile * 8 , panel.tile * 5, panel.tile * 8, panel.tile * 3/4);
+            studentIDBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(studentIDBox, "  Ingrese el ID del estudiante");
+            panel.add(studentIDBox);
+            
+            studentScoreBox = new JTextField(40);
+            studentScoreBox.setBounds(panel.tile * 8 , panel.tile * 6, panel.tile * 8, panel.tile * 3/4);
+            studentScoreBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+            addPlaceholder(studentScoreBox, "  Ingrese el puntaje socioeconómico del estudiante");
+            panel.add(studentScoreBox);
         }
-
     }
     
     //Métodos auxiliares 
