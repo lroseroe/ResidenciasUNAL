@@ -5,8 +5,8 @@ public class MinHeap<T extends Comparable<T>>{
     int maxSize;
     int size;
     
-    public MinHeap(int n){
-        maxSize = n;
+    public MinHeap(int maxSize){
+        this. maxSize = maxSize;
         array = (T[]) new Comparable[maxSize];
         size = 0;
     }
@@ -20,32 +20,32 @@ public class MinHeap<T extends Comparable<T>>{
     }
     
     public int rightChild(int i){
-        return 2*i + 2;
+        return 2*i;
     }
     
     public void swap(int i, int j){
-        T temp = array[j];
-        array[j] = array[i];
-        array[i] = temp;
+        T temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
         
     }
     
     public void siftUp(int i){
         while(i > 0 && array[parent(i)].compareTo(array[i]) > 0){ //Si el padre es mayor, hay que hacer swap
-            swap(i, parent(i));
+            swap(parent(i), i);
             i = parent(i);
         }
     }
     
     public void siftDown(int i){
         int maxIndex = i;
-        
         int left = leftChild(i);
+        int right = rightChild(i);
+
         if(left < size && array[left].compareTo(array[maxIndex]) < 0){
             maxIndex = left;
         }
-        
-        int right = rightChild(i);
+    
         if(right < size && array[right].compareTo(array[maxIndex]) < 0){
             maxIndex = right;
         }
@@ -58,7 +58,7 @@ public class MinHeap<T extends Comparable<T>>{
     
     public void insert(T item){
         if(size == maxSize){
-            throw new RuntimeException("Heap is full.");
+            throw new RuntimeException("The heap is full."); //Cupos disponibles
         }
         array[size] = item;
         siftUp(size);
