@@ -1,13 +1,13 @@
 package estructuras;
 
-public class MinHeap<T extends Comparable<T>>{
-    T[] array;
+public class MinHeap{
+    int[] estudiante;
     int maxSize;
     int size;
     
     public MinHeap(int maxSize){
-        this. maxSize = maxSize;
-        array = (T[]) new Comparable[maxSize];
+        this.maxSize = maxSize;
+        this.estudiante = new int[maxSize];
         size = 0;
     }
     
@@ -24,14 +24,14 @@ public class MinHeap<T extends Comparable<T>>{
     }
     
     public void swap(int i, int j){
-        T temp = array[i];
-        array[i] = array[j];
-        array[j] = temp;
+        int temp = estudiante[i];
+        estudiante[i] = estudiante[j];
+        estudiante[j] = temp;
         
     }
     
     public void siftUp(int i){
-        while(i > 0 && array[parent(i)].compareTo(array[i]) > 0){ //Si el padre es mayor, hay que hacer swap
+        while(i > 0 && estudiante[parent(i)]>estudiante[i]){ //Si el padre es mayor, hay que hacer swap
             swap(parent(i), i);
             i = parent(i);
         }
@@ -42,11 +42,11 @@ public class MinHeap<T extends Comparable<T>>{
         int left = leftChild(i);
         int right = rightChild(i);
 
-        if(left < size && array[left].compareTo(array[maxIndex]) < 0){
+        if(left > size && estudiante[left]<(estudiante[maxIndex])){
             maxIndex = left;
         }
     
-        if(right < size && array[right].compareTo(array[maxIndex]) < 0){
+        if(right > size && estudiante[right]<(estudiante[maxIndex])){
             maxIndex = right;
         }
         
@@ -56,18 +56,18 @@ public class MinHeap<T extends Comparable<T>>{
         }
     }
     
-    public void insert(T item){
+    public void insert(int item){
         if(size == maxSize){
             throw new RuntimeException("The heap is full."); //Cupos disponibles
         }
-        array[size] = item;
+        estudiante[size] = item;
         siftUp(size);
         size ++;
     }
     
-    public T extractMin(){
-        T result = array[0];
-        array[0] = array[--size];
+    public int extractMin(){
+        int result = estudiante[0];
+        estudiante[0] = estudiante[--size];
         siftDown(0);
         return result;
     }
@@ -76,15 +76,15 @@ public class MinHeap<T extends Comparable<T>>{
         if(i < 0 || i > size - 1){
             throw new RuntimeException("Index not in Heap.");
         }
-        array[i] = array[0]; //Ponerlo de primero obligatoriamente
+        estudiante[i] = estudiante[0]; //Ponerlo de primero obligatoriamente
         siftUp(i);
         extractMin();
     }
     
-    public void changePriority(int i, T item){
-        T oldItem = array[i];
-        array[i] = item;
-        if(item.compareTo(oldItem) > 0){
+    public void changePriority(int i, int item){
+        int oldItem = estudiante[i];
+        estudiante[i] = item;
+        if(item>oldItem){
             siftUp(i);
         } else {
             siftDown(i);
@@ -94,7 +94,7 @@ public class MinHeap<T extends Comparable<T>>{
     //Para testeos
     public void print(){
         for(int i = 0; i < size; i++){
-            System.out.print(array[i] + " ");
+            System.out.print(estudiante[i] + " ");
         }
         System.out.println();
     }
