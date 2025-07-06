@@ -4,11 +4,13 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
 
 public class UI{
     private MainPanel panel;
@@ -66,6 +68,7 @@ public class UI{
         drawTextFields();
         drawButtons();
         drawLabels();
+        drawTable();
     }
     
     public void draw(Graphics2D grafica){
@@ -98,6 +101,61 @@ public class UI{
         drawTextFields();
         drawButtons();
         drawLabels();
+        drawTable();
+    }
+    
+    public void drawTable(){
+        if(panel.mouseCtrl.listStudentsBtnPressed){
+            try{
+                InputStream file = getClass().getResourceAsStream("/test.xlsx");
+                JTable table = ExcelLoader.loadExcel(file);
+                table.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
+                table.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
+                table.getTableHeader().setBackground(new Color(153, 43, 43));
+                table.getTableHeader().setForeground(Color.white);
+                
+                table.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
+                table.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
+                table.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
+                table.getColumnModel().getColumn(3).setPreferredWidth(panel.tile / 2); //Si tiene residencia o no
+                
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
+                centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+                
+                //Para pintar las celdas verde si dice SI, rojo si dice NO
+                DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer(){
+                    @Override
+                    public Component getTableCellRendererComponent(JTable table, Object value, 
+                       boolean isSelected, boolean hasFocus, 
+                       int row, int col){
+                       Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col); //Obtener celda
+
+                       if (value.toString().equals("SI")){
+                          c.setBackground(new Color(163, 255, 118)); //Verde
+                       }else  
+                          c.setBackground(new Color(255, 118, 118)); //Rojo
+                       
+                       setHorizontalAlignment(SwingConstants.CENTER);
+                       return c;
+                    }
+                    
+                    
+                };
+                
+                table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+                table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+                table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+                table.getColumnModel().getColumn(3).setCellRenderer(colorRenderer);
+                
+                JScrollPane scroll = new JScrollPane(table);
+                scroll.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
+                panel.add(scroll);
+                
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+        }  
     }
     
     public void drawLabels(){
@@ -223,6 +281,10 @@ public class UI{
             option1.setBackground(new Color(153, 43, 43)); //Rojo
             option1.addMouseListener(new CurrentScreenControler(panel, panel.studentInfoScreen));
             panel.add(option1);
+            if(panel.currentScreen == panel.studentInfoScreen){
+                option1.setForeground(new Color(153, 43, 43));
+                option1.setBackground(Color.white); 
+            }
             
             JButton option2 = new JButton("Disponibilidad de cupos");
             option2.setBounds(0, panel.tile * 3, panel.tile * 7, panel.tile);
@@ -234,6 +296,10 @@ public class UI{
             option2.setBackground(new Color(153, 43, 43)); //Rojo
             option2.addMouseListener(new CurrentScreenControler(panel, panel.residenceAvailabilityScreen)); //Cambiar a esta pantalla
             panel.add(option2);
+            if(panel.currentScreen == panel.residenceAvailabilityScreen){
+                option2.setForeground(new Color(153, 43, 43));
+                option2.setBackground(Color.white); 
+            }
             
             JButton option3 = new JButton("Consultar asignación");
             option3.setBounds(0, panel.tile * 4, panel.tile * 7, panel.tile);
@@ -245,8 +311,12 @@ public class UI{
             option3.setBackground(new Color(153, 43, 43)); //Rojo
             option3.addMouseListener(new CurrentScreenControler(panel, panel.asignationInfoScreen)); 
             panel.add(option3);
+            if(panel.currentScreen == panel.asignationInfoScreen){
+                option3.setForeground(new Color(153, 43, 43));
+                option3.setBackground(Color.white); 
+            }
             
-            JButton option4 = new JButton("Agregar asignación");
+            JButton option4 = new JButton("Editar asignación");
             option4.setBounds(0, panel.tile * 5, panel.tile * 7, panel.tile);
             option4.setFont(defaultFont.deriveFont(Font.PLAIN, 20F));
             option4.setForeground(Color.white);
@@ -256,6 +326,10 @@ public class UI{
             option4.setBackground(new Color(153, 43, 43)); //Rojo
             option4.addMouseListener(new CurrentScreenControler(panel, panel.editAsignationScreen)); 
             panel.add(option4);
+            if(panel.currentScreen == panel.editAsignationScreen){
+                option4.setForeground(new Color(153, 43, 43));
+                option4.setBackground(Color.white); 
+            }
             
             JButton option5 = new JButton("Información adicional");
             option5.setBounds(0, panel.tile * 11, panel.tile * 7, panel.tile);
@@ -267,6 +341,10 @@ public class UI{
             option5.setBackground(new Color(153, 43, 43)); //Rojo
             option5.addMouseListener(new CurrentScreenControler(panel, panel.systemInfoScreen)); 
             panel.add(option5);
+            if(panel.currentScreen == panel.systemInfoScreen){
+                option5.setForeground(new Color(153, 43, 43));
+                option5.setBackground(Color.white); 
+            }
             
             //Otras opciones
             if(panel.currentScreen == panel.studentInfoScreen){
