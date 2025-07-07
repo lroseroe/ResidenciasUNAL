@@ -107,8 +107,8 @@ public class UI{
     public void drawTable(){
         if(panel.mouseCtrl.listStudentsBtnPressed){
             try{
-                InputStream file = getClass().getResourceAsStream("/test.xlsx");
-                JTable table = ExcelLoader.loadExcel(file);
+                InputStream file = getClass().getResourceAsStream("/test.csv");
+                JTable table = CSVLoader.loadCSV(file);
                 table.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
                 table.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
                 table.getTableHeader().setBackground(new Color(153, 43, 43));

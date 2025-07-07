@@ -1,9 +1,9 @@
 main\CurrentScreenControler.class
 main\MouseController.class
+main\CSVLoader.class
 main\UI$2.class
 estructuras\MinHeap.class
 main\Main.class
 main\UI$1.class
 main\MainPanel.class
-main\ExcelLoader.class
 main\UI.class
