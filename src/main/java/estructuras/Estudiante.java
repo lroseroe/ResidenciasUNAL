@@ -25,7 +25,6 @@ public class Estudiante{
         return this.nombre;
     }
 
-
     public void setPuntaje(int n){
         this.puntaje=n;
     }
@@ -41,5 +40,7 @@ public class Estudiante{
         return this.tieneApoyo;
     }
 
-
+    public int compareTo(Estudiante otro){
+        return Integer.compare(this.puntaje, otro.puntaje);
+    }
 }
