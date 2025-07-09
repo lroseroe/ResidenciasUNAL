@@ -27,9 +27,11 @@ public class MyHashMap {
 
     private final int SIZE = 100; // Tamaño del array de buckets
     private HashNode[] table;
+    private int tamano;
 
     public MyHashMap() {
         table = new HashNode[SIZE];
+        tamano=0;
     }
 
     /*Hash con potencias de primos */
@@ -61,6 +63,7 @@ public class MyHashMap {
                 }else{
                     prev.siguiente=head.siguiente;
                 }
+                tamano--;
                 return;
             }
             prev=head;
@@ -83,6 +86,7 @@ public class MyHashMap {
         }
 
         // Insertar nuevo Entry al inicio
+        tamano++;
         HashNode newEntry = new HashNode(llave, estudiante);
         newEntry.siguiente = table[index];
         table[index] = newEntry;
@@ -137,4 +141,8 @@ public class MyHashMap {
         }
     }
     
+    public int getTamano(){
+        return tamano;
+    }
+            
 }

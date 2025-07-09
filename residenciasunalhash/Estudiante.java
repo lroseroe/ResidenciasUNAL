@@ -53,23 +53,28 @@ public class Estudiante{
     public boolean getApoyo(){
         return this.tieneApoyo;
     }
-
+    
      // Método para convertir a CSV
     public String toCSV() {
-        return id + "," + nombre + "," + puntaje + "," + tieneApoyo;
+        String idEnc = CriptoCode.encriptar(String.valueOf(id));
+        String nombreEnc = CriptoCode.encriptar(nombre.replace(",", ";"));
+        String puntajeEnc = CriptoCode.encriptar(String.valueOf(puntaje));
+        String apoyoEnc = CriptoCode.encriptar(String.valueOf(tieneApoyo));
+        return idEnc + "," + nombreEnc + "," + puntajeEnc + "," + apoyoEnc;
     }
 
     // Método para crear estudiante desde CSV
     public static Estudiante fromCSV(String linea) {
         String[] partes = linea.split(",", -1);
         if (partes.length < 4) return null;
-        long id = Long.parseLong(partes[0]);
-        String nombre = partes[1];
-        int puntaje = Integer.parseInt(partes[2]);
-        boolean tieneApoyo = Boolean.parseBoolean(partes[3]);
+
+        long id = Long.parseLong(CriptoCode.desencriptar(partes[0]));
+        String nombre = CriptoCode.desencriptar(partes[1]).replace(";", ",");
+        int puntaje = Integer.parseInt(CriptoCode.desencriptar(partes[2]));
+        boolean apoyo = Boolean.parseBoolean(CriptoCode.desencriptar(partes[3]));
 
         Estudiante est = new Estudiante(id, nombre, puntaje);
-        est.setApoyo(tieneApoyo);
+        est.setApoyo(apoyo);
         return est;
     }
     

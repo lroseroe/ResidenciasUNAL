@@ -48,7 +48,14 @@ public class ResidenciasUnalHash {
         /*Mensaje provisional */
         
     }
-
+    
+    public static int getEstudiantes() {
+        return usuarios.getTamano();
+        /*System.out.println("El estudiante no existe.");*/
+        /*Mensaje provisional */
+        
+    }
+    
     public static boolean cambiarPuntaje(long id, int puntaje) {
         if (usuarios.containsKey(id)) {
             Estudiante miEstudiante = usuarios.get(id);
@@ -97,8 +104,10 @@ public class ResidenciasUnalHash {
             System.out.println("\n--- Menú ---");
             System.out.println("1. Registrar usuario");
             System.out.println("2. Mostrar Info");
-            System.out.println("3. Salir");
-            System.out.println("4. Eliminar usuario");
+            System.out.println("3. Eliminar usuario");
+            System.out.println("4. Ver cantidad usuarios");
+            System.out.println("9. Salir");
+            
             System.out.print("Selecciona una opción: ");
             int option = scanner.nextInt();
             scanner.nextLine();
@@ -126,15 +135,21 @@ public class ResidenciasUnalHash {
                     break;
 
                 case 3:
-                    System.out.println("Hasta luego.");
-                    return;
-                case 4:
                     System.out.print("ID: ");
                     newUser = scanner.nextLong();
                     borrarUsuario(newUser);
                     
                     break;
+                case 4:
+                    System.out.print("Hay: ");
+                    System.out.print(getEstudiantes());
+                    
+                    break;
 
+                case 9:
+                    System.out.println("Hasta luego.");
+                    return;
+                    
                 default:
                     System.out.println("Opción inválida.");
             }
