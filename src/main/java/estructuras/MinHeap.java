@@ -1,33 +1,25 @@
 package estructuras;
 
-//Aqui debemos poner en la funcion de registarr estudiante el llamado
 //el llamado minHeap.insert(estudiante);
 
-public class MinHeap<T extends Comparable<T>>{
-    T[] puntajes;
+public class MinHeap{
+    Estudiante[] puntajes;
     int maxSize;
     int size;
     
-    //Funcion cambiar cupos copiando los puntajes a un nuevo heap
-    public void newPlaces(int cupos){
-        MinHeap<T> nuevoHeap = new MinHeap<>(cupos);
-        for(int i=0; i<size;i++){
-            nuevoHeap.insert(puntajes[i]);
-        }
+    public MinHeap(int maxSize){
+        this.maxSize = maxSize;
+        this.puntajes = new Estudiante[maxSize];
+        size = 0;
     }
 
+    public int getSize(){
+        return size;
+    }
     public int getPlaces(){
         return maxSize;
     }
-
-    //Funciones Internas
-    public MinHeap(int maxSize){
-        this.maxSize = maxSize;
-        this.puntajes = (T[])new Comparable[maxSize];
-        size = 0;
-    }
     
-    //Funciones de claves
     public int parent(int i){
         return (i-1)/2;
     }
@@ -41,13 +33,14 @@ public class MinHeap<T extends Comparable<T>>{
     }
     
     public void swap(int i, int j){
-        T temp = puntajes[i];
+        Estudiante temp = puntajes[i];
         puntajes[i] = puntajes[j];
         puntajes[j] = temp;
     }
     
     public void siftUp(int i){
-        while(i > 0 && puntajes[parent(i)].compareTo(puntajes[i])<0){ //Si el padre es mayor, hay que hacer swap
+        while(i > 0 && puntajes[parent(i)].compareTo(puntajes[i]) > 0){ //Si el padre es mayor, hay que hacer swap
+           
             swap(parent(i), i);
             i = parent(i);
         }
@@ -58,11 +51,11 @@ public class MinHeap<T extends Comparable<T>>{
         int left = leftChild(i);
         int right = rightChild(i);
 
-        if(left < size && puntajes[left].compareTo(puntajes[minIndex])<0){
+        if(left < size && puntajes[left].compareTo(puntajes[minIndex]) < 0){
             minIndex = left;
         }
     
-        if(right < size && puntajes[right].compareTo(puntajes[minIndex])<0){
+        if(right < size && puntajes[right].compareTo(puntajes[minIndex]) < 0){
             minIndex = right;
         }
         
@@ -71,47 +64,64 @@ public class MinHeap<T extends Comparable<T>>{
             siftDown(minIndex);
         }
     }
-
-    public T extractMin(){
-        T result = puntajes[0];
-        puntajes[0] = puntajes[--size];
-        siftDown(0);
-        return result;
-    }
     
-    //Funciones Publicas
-    public void insert(T item){
+    public void insert(Estudiante item){
         if(size == maxSize){
-            throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
+            return;
+            //throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
         }
         puntajes[size] = item;
-        siftUp(size);
-        size ++;
+        size++;
+        siftUp(size-1);
+    }
+
+    public Estudiante extractMin(){
+        if(size == 0){
+            return null;
+        }
+        
+        Estudiante min = puntajes[0];
+        puntajes[0] = puntajes[size-1];
+        size--;
+        siftDown(0);
+        return min;
     }
     
-    public void remove(Estudiante i){
-        if(i.puntaje < 0 || i.puntaje > size - 1){
-            throw new RuntimeException("El estudiante no se encuentra registrado."); //Problema deberia ser con el id 
+    public void remove(Estudiante estudiante){
+        int i = findIndex(estudiante);
+        if(i < 0 || i > size - 1){
+            throw new RuntimeException("El estudiante no se encuentra registrado."); 
         }
-        puntajes[i.puntaje] = puntajes[0]; //Ponerlo de primero obligatoriamente
-        siftUp(i.puntaje);
+
+        puntajes[i] = puntajes[0]; //Ponerlo de primero obligatoriamente
+        siftUp(i);
         extractMin();
     }
 
     public boolean find(Estudiante estudiante){
         for(int i=0; i<size; i++){
-            if(puntajes[i].equals(estudiante.puntaje)){
+            if(puntajes[i].equals(estudiante)){
                 return true;
             }
         }
         
         return false;
     }
+
+    public int findIndex(Estudiante estudiante){
+        for(int i=0; i<size; i++){
+            if(puntajes[i].equals(estudiante)){
+                return i;
+            }
+        }
+
+        return -1;
+    }
     
     public void changePriority(Estudiante estudiante, int nuevoPuntaje){
         int index = -1;
         for(int i=0; i<size; i++){
-            if(puntajes[i].equals(estudiante.puntaje)){
+            if(puntajes[i].equals(estudiante)){
                 index = i;
                 break;
             }
@@ -126,6 +136,15 @@ public class MinHeap<T extends Comparable<T>>{
         } else {
             siftDown(index);
         }
+    }
+
+    public void print(){
+        System.out.println("Estudiantes en el sistema: ");
+        for(int i = 0;i<size;i++){
+            System.out.println(puntajes[i].getNombre() + " " + puntajes[i].getID() + " " + puntajes[i].getPuntaje() + " " + puntajes[i].getApoyo());
+        }
+
+        System.out.println();
     }
 }
 

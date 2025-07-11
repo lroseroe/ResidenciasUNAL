@@ -5,7 +5,7 @@ public class Estudiante{
     long id;
     String nombre;
     int puntaje;
-    boolean tieneApoyo;
+    public boolean tieneApoyo;
 
     public Estudiante(){
         this.id=9999999999L;
@@ -21,6 +21,9 @@ public class Estudiante{
         this.tieneApoyo=false;
     }
 
+    public long getID(){
+        return this.id;
+    }
     public String getNombre(){
         return this.nombre;
     }
