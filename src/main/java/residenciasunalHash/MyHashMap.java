@@ -1,5 +1,10 @@
+package residenciasunalhash;
 
-package com.mycompany.residenciasunalhash;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
@@ -22,9 +27,11 @@ public class MyHashMap {
 
     private final int SIZE = 100; // Tamaño del array de buckets
     private HashNode[] table;
+    private int tamano;
 
     public MyHashMap() {
         table = new HashNode[SIZE];
+        tamano=0;
     }
 
     /*Hash con potencias de primos */
@@ -56,6 +63,7 @@ public class MyHashMap {
                 }else{
                     prev.siguiente=head.siguiente;
                 }
+                tamano--;
                 return;
             }
             prev=head;
@@ -64,7 +72,7 @@ public class MyHashMap {
     }
 
     // Agregar o actualizar un estudiante
-    public void put(long llave, String estudiante) {
+    public void put(long llave, Estudiante estudiante) {
         int index = hash(llave);
         HashNode head = table[index];
 
@@ -78,13 +86,14 @@ public class MyHashMap {
         }
 
         // Insertar nuevo Entry al inicio
+        tamano++;
         HashNode newEntry = new HashNode(llave, estudiante);
         newEntry.siguiente = table[index];
         table[index] = newEntry;
     }
 
     // Obtener el estudiante asociado a una clave
-    public String get(long key) {
+    public Estudiante get(long key) {
         int index = hash(key);
         HashNode head = table[index];
 
@@ -101,4 +110,39 @@ public class MyHashMap {
     public boolean containsKey(long llave) {
         return get(llave) != null;
     }
+    
+     public void guardarComoCSV(String nombreArchivo) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+            for (int i = 0; i < SIZE; i++) {
+                HashNode current = table[i];
+                while (current != null) {
+                    writer.write(current.estudiante.toCSV());
+                    writer.newLine();
+                    current = current.siguiente;
+                }
+            }
+            System.out.println("Datos guardados en: " + nombreArchivo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Importar estudiantes desde un archivo CSV
+    public void cargarDesdeCSV(String nombreArchivo) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            while ((linea = reader.readLine()) != null) {
+                Estudiante est = Estudiante.fromCSV(linea);
+                put(est.getID(), est);
+            }
+            System.out.println("Datos cargados desde: " + nombreArchivo);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public int getTamano(){
+        return tamano;
+    }
+            
 }

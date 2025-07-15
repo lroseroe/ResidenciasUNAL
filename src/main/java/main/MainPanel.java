@@ -35,6 +35,7 @@ public class MainPanel extends JPanel{
     
     MouseController mouseCtrl = new MouseController(this);
     UI interfaz = new UI(this);
+    SystemControl control = new SystemControl(100); //Temporalmente el máximo es 100
             
     public MainPanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -65,7 +66,9 @@ public class MainPanel extends JPanel{
         mouseCtrl.checkAvailabiltyBtnPressed = false;
         mouseCtrl.editNumPlacesBtnPressed = false;
         mouseCtrl.listStudentsBtnPressed = false;
+        mouseCtrl.asignPlacesBtnPressed = false;
         mouseCtrl.addStudentBtnPressed = false;
+        
         
         interfaz.updateScreen();
     }

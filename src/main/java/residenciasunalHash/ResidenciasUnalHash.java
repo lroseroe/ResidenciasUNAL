@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package com.mycompany.residenciasunalhash;
+package residenciasunalhash;
 
 /**
  *
@@ -78,7 +78,7 @@ public class ResidenciasUnalHash {
             miEstudiante = usuarios.get(id);
         }else{
             /*Caso en que no se encontro el estudiante */
-            miEstudiante=new Estudiante();
+            miEstudiante = null;
         }
         /*Se deja a implementacion del equipo de trabajo del UI mostrar los valores en pantalla */
         return miEstudiante;

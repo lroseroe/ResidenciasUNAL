@@ -2,8 +2,10 @@ package main;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import residenciasunalhash.Estudiante;
 
 
 public class MouseController implements MouseListener{
@@ -11,9 +13,11 @@ public class MouseController implements MouseListener{
     //booleanos para verificar que boton se ha presionado y saber que mostrar en UI
     public boolean searchBtnPressed = false, removeStudentBtnPressed = false, editScoreBtnPressed = false;
     public boolean editNumPlacesBtnPressed = false, checkAvailabiltyBtnPressed = false, listStudentsBtnPressed = false; 
-    public boolean addStudentBtnPressed = false; 
+    public boolean asignPlacesBtnPressed = false, addStudentBtnPressed = false; 
     
     public boolean studentFound; //Solo para cuando estas buscando un estudiante o agregandolo
+    public boolean studentEliminated;
+    public long ID = 0l;
     
     public MouseController(MainPanel panel){
         this.panel = panel;
@@ -31,35 +35,44 @@ public class MouseController implements MouseListener{
                         Long.parseLong(IDstr) >= 100000000000L){ //Verificar string válido
                     JOptionPane.showMessageDialog(panel, "Ingrese un ID válido", "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
                     return;
-                } else { 
-                    long ID = Long.parseLong(IDstr);
-                    //Cambiar el puntaje
+                } 
+                ID = Long.parseLong(IDstr);
+                Estudiante estudiante = panel.control.buscarEstudiante(ID);
+                studentFound = estudiante != null;
+                studentEliminated = false;
+                
+                if(studentFound){
+                    panel.interfaz.nameFilledText = new JLabel(estudiante.getNombre());
+                    panel.interfaz.IDFilledText = new JLabel(Long.toString(estudiante.getID()));
+                    panel.interfaz.scoreFilledText = new JLabel(Integer.toString(estudiante.getPuntaje()));
                 }
-                
-                //Logica de buscar al estudiante pasandole ID
-                
-                studentFound = true;
-            } else if(btn == panel.interfaz.removeStudentBtn){
+
+            } 
+            if(btn == panel.interfaz.removeStudentBtn){
                 int choice = JOptionPane.showConfirmDialog(panel, "¿Está seguro?", "Eliminar estudiante", 
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                 if(choice == JOptionPane.YES_OPTION){
-                    //Eliminar estudiante
+                    studentEliminated = panel.control.eliminarEstudiante(ID);
+                    System.out.println("Eliminado: " + studentEliminated);
+                    System.out.println("ID: " + ID);
                 } 
                 
                 //Si no, solo se cierra la ventanita
-            } else if(btn == panel.interfaz.editScoreBtn){
+            } 
+            if(btn == panel.interfaz.editScoreBtn){
                 String newScoreStr = JOptionPane.showInputDialog(panel, "Ingrese el nuevo puntaje socioeconómico", 
                         "Editar puntaje", JOptionPane.INFORMATION_MESSAGE);
                 
-                if(newScoreStr != null && newScoreStr.matches("-?\\d+(\\.\\d+)?") && 
-                        Integer.parseInt(newScoreStr) >= 0 ){ //Verificar que el string sea un número válido
-                    int newScore = Integer.parseInt(newScoreStr);
-                    //Cambiar el puntaje
-                } else {
+                if(!newScoreStr.matches("-?\\d+(\\.\\d+)?") || 
+                    Integer.parseInt(newScoreStr) < 0){ //Verificar que el string sea un número válido
                     JOptionPane.showMessageDialog(panel, "Solo ingrese números positivos", "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
                     return;
-                }
+                } 
                 
+                int newScore = Integer.parseInt(newScoreStr);
+                panel.control.actualizarPuntaje(ID, newScore);
+                panel.interfaz.scoreFilledText.setText(Integer.toString(newScore));
+ 
             }
         } else if(panel.currentScreen == panel.residenceAvailabilityScreen){
             if(btn == panel.interfaz.checkAvailabiltyBtn){
@@ -85,13 +98,17 @@ public class MouseController implements MouseListener{
         } else if(panel.currentScreen == panel.asignationInfoScreen){
             if(btn == panel.interfaz.listStudentsBtn){
                 listStudentsBtnPressed = true;
+                asignPlacesBtnPressed = false;
+            } else if(btn == panel.interfaz.asignPlacesBtn){
+                asignPlacesBtnPressed = true;
+                listStudentsBtnPressed = false; 
             }
         } else if(panel.currentScreen == panel.editAsignationScreen){
             if(btn == panel.interfaz.addStudentBtn){
                 addStudentBtnPressed = true;
                 
                 //Verificar que los datos ingresados sean válidos
-                    //Verficar si alguna caja de texto está vacía
+                //Verficar si alguna caja de texto está vacía
                 if(checkTextFieldEmpty(panel.interfaz.studentNamesBox) ||
                    checkTextFieldEmpty(panel.interfaz.studentLastNamesBox) ||
                    checkTextFieldEmpty(panel.interfaz.studentIDBox) ||
@@ -106,8 +123,11 @@ public class MouseController implements MouseListener{
                     String ID_str = panel.interfaz.studentIDBox.getText();
                     String score_str = panel.interfaz.studentScoreBox.getText();
                     
+                    long ID;
+                    int score;
+                    
                     if(ID_str.matches("-?\\d+(\\.\\d+)?") && Long.parseLong(ID_str) > 0){
-                        Long ID = Long.parseLong(ID_str);
+                        ID = Long.parseLong(ID_str);
                     } else {
                         JOptionPane.showMessageDialog(panel, "Ingrese un ID válido", 
                             "Error: Entrada no válida", JOptionPane.ERROR_MESSAGE);
@@ -115,11 +135,21 @@ public class MouseController implements MouseListener{
                     }
                     
                     if(score_str.matches("-?\\d+(\\.\\d+)?") && Long.parseLong(score_str) > 0){
-                        int score = Integer.parseInt(score_str);
+                        score = Integer.parseInt(score_str);
                     } else {
                         JOptionPane.showMessageDialog(panel, "Ingrese un puntaje socioeconómico válido", 
                             "Error: Entrada no válida", JOptionPane.ERROR_MESSAGE);
                         return;
+                    }
+                    
+                    //Luego de todas las verificaciones, agregamos el estudiante
+                    studentFound = !panel.control.insertarEstudiante(ID, names + " " + lastNames, score);
+                    if(studentFound){
+                        JOptionPane.showMessageDialog(panel, "Este estudiante ya está registrado en el sistema.", 
+                            "Error: Estudiante encontrado", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(panel, "Estudiante registrado con éxito.", 
+                            "Estudiante registrado", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } 
             }

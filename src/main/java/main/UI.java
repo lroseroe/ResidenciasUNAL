@@ -31,10 +31,10 @@ public class UI{
     //residenceAvailabilityScreen
     JButton editNumPlacesBtn; //Editar cantidad de cupos total
     JButton checkAvailabiltyBtn; //Revisar cantidad de cupos disponibles
-    JButton confirmEditingBtn; 
     
     //asignationInfoScreen
-    JButton listStudentsBtn; //Listar estudiantes con y sin cupo obtenido
+    JButton listStudentsBtn; //Listar estudiantes
+    JButton asignPlacesBtn; //Asignar los cupos
     
     //editAsignationScreen
     JButton addStudentBtn; //Registrar estudiante al sistema
@@ -47,6 +47,11 @@ public class UI{
     JTextField studentLastNamesBox;
     JTextField studentIDBox;
     JTextField studentScoreBox;
+    
+    //Al buscar un estudiante
+    JLabel nameFilledText;
+    JLabel IDFilledText; 
+    JLabel scoreFilledText;
     
     public UI(MainPanel panel){
         this.panel = panel;
@@ -83,7 +88,7 @@ public class UI{
             grafica.drawImage(defaultMenuScreenImage, 0, 0, null);
         } else {
             grafica.drawImage(menuScreenImage, 0, 0, null);
-            if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound){
+            if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound && !panel.mouseCtrl.studentEliminated){
                 grafica.drawImage(profileImage, panel.tile * 8, panel.tile * 5, null);
             }
         }
@@ -117,7 +122,37 @@ public class UI{
                 table.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
                 table.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
                 table.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
-                table.getColumnModel().getColumn(3).setPreferredWidth(panel.tile / 2); //Si tiene residencia o no
+                table.removeColumn(table.getColumnModel().getColumn(3));
+                
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
+                centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+                
+                table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+                table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+                table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+
+                
+                JScrollPane scroll = new JScrollPane(table);
+                scroll.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
+                panel.add(scroll);
+                
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+            
+        } else if(panel.mouseCtrl.asignPlacesBtnPressed){
+            try{
+                InputStream file = getClass().getResourceAsStream("/test.csv");
+                JTable table1 = CSVLoader.loadCSV(file);
+                table1.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
+                table1.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
+                table1.getTableHeader().setBackground(new Color(153, 43, 43));
+                table1.getTableHeader().setForeground(Color.white);
+                
+                table1.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
+                table1.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
+                table1.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
+                table1.getColumnModel().getColumn(3).setPreferredWidth(panel.tile / 2); //Si tiene residencia o no
                 
                 DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
                 centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
@@ -142,20 +177,19 @@ public class UI{
                     
                 };
                 
-                table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-                table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-                table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-                table.getColumnModel().getColumn(3).setCellRenderer(colorRenderer);
+                table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+                table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+                table1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+                table1.getColumnModel().getColumn(3).setCellRenderer(colorRenderer);
                 
-                JScrollPane scroll = new JScrollPane(table);
-                scroll.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
-                panel.add(scroll);
+                JScrollPane scroll1 = new JScrollPane(table1);
+                scroll1.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
+                panel.add(scroll1);
                 
             } catch(Exception e){
                 e.printStackTrace();
             }
-            
-        }  
+        }
     }
     
     public void drawLabels(){
@@ -168,47 +202,46 @@ public class UI{
                 notFoundText.setBackground(Color.white);
                 panel.add(notFoundText);
             } else {
-                JLabel nameText = new JLabel("Nombre: ");
-                nameText.setBounds(panel.tile * 14, panel.tile * 5, panel.tile * 10, panel.tile * 3/4);
-                nameText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                nameText.setForeground(Color.black);
-                nameText.setBackground(Color.white);
-                panel.add(nameText);
-                
-                JLabel nameFilledText = new JLabel("###### ####### ####### #########");
-                nameFilledText.setBounds(panel.tile * 14, panel.tile * 11/2, panel.tile * 10, panel.tile * 3/4);
-                nameFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                nameFilledText.setForeground(Color.gray);
-                nameFilledText.setBackground(Color.white);
-                panel.add(nameFilledText);
-                
-                JLabel IDText = new JLabel("ID: ");
-                IDText.setBounds(panel.tile * 14, panel.tile * 6, panel.tile * 10, panel.tile * 3/4);
-                IDText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                IDText.setForeground(Color.black);
-                IDText.setBackground(Color.white);
-                panel.add(IDText);
-                
-                JLabel IDFilledText = new JLabel("############");
-                IDFilledText.setBounds(panel.tile * 14, panel.tile * 13/2, panel.tile * 10, panel.tile * 3/4);
-                IDFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                IDFilledText.setForeground(Color.gray);
-                IDFilledText.setBackground(Color.white);
-                panel.add(IDFilledText);
-                
-                JLabel ScoreText = new JLabel("Puntaje socioeconómico: ");
-                ScoreText.setBounds(panel.tile * 14, panel.tile * 7, panel.tile * 10, panel.tile * 3/4);
-                ScoreText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                ScoreText.setForeground(Color.black);
-                ScoreText.setBackground(Color.white);
-                panel.add(ScoreText);
-                
-                JLabel ScoreFilledText = new JLabel("####");
-                ScoreFilledText.setBounds(panel.tile * 14, panel.tile * 15/2, panel.tile * 10, panel.tile * 3/4);
-                ScoreFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
-                ScoreFilledText.setForeground(Color.gray);
-                ScoreFilledText.setBackground(Color.white);
-                panel.add(ScoreFilledText);
+                if(!panel.mouseCtrl.studentEliminated){
+                    JLabel nameText = new JLabel("Nombre: ");
+                    nameText.setBounds(panel.tile * 14, panel.tile * 5, panel.tile * 10, panel.tile * 3/4);
+                    nameText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    nameText.setForeground(Color.black);
+                    nameText.setBackground(Color.white);
+                    panel.add(nameText);
+
+                    nameFilledText.setBounds(panel.tile * 14, panel.tile * 11/2, panel.tile * 10, panel.tile * 3/4); //Se inicializa en MouseController
+                    nameFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    nameFilledText.setForeground(Color.gray);
+                    nameFilledText.setBackground(Color.white);
+                    panel.add(nameFilledText);
+
+                    JLabel IDText = new JLabel("ID: ");
+                    IDText.setBounds(panel.tile * 14, panel.tile * 6, panel.tile * 10, panel.tile * 3/4);
+                    IDText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    IDText.setForeground(Color.black);
+                    IDText.setBackground(Color.white);
+                    panel.add(IDText);
+
+                    IDFilledText.setBounds(panel.tile * 14, panel.tile * 13/2, panel.tile * 10, panel.tile * 3/4);
+                    IDFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    IDFilledText.setForeground(Color.gray);
+                    IDFilledText.setBackground(Color.white);
+                    panel.add(IDFilledText);
+
+                    JLabel ScoreText = new JLabel("Puntaje socioeconómico: ");
+                    ScoreText.setBounds(panel.tile * 14, panel.tile * 7, panel.tile * 10, panel.tile * 3/4);
+                    ScoreText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    ScoreText.setForeground(Color.black);
+                    ScoreText.setBackground(Color.white);
+                    panel.add(ScoreText);
+
+                    scoreFilledText.setBounds(panel.tile * 14, panel.tile * 15/2, panel.tile * 10, panel.tile * 3/4);
+                    scoreFilledText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
+                    scoreFilledText.setForeground(Color.gray);
+                    scoreFilledText.setBackground(Color.white);
+                    panel.add(scoreFilledText);
+                }
             }
         } else if(panel.mouseCtrl.checkAvailabiltyBtnPressed){
             JLabel availabilityText = new JLabel("Hay " + panel.availableResidences + " cupos disponibles.");
@@ -359,7 +392,8 @@ public class UI{
                 searchBtn.addMouseListener(panel.mouseCtrl); 
                 panel.add(searchBtn);
                 
-                if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound){
+                System.out.println("Eliminado actual: " + panel.mouseCtrl.studentEliminated);
+                if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound && !panel.mouseCtrl.studentEliminated){
                     removeStudentBtn = new JButton("Eliminar estudiante");
                     removeStudentBtn.setBounds(panel.tile * 14, panel.tile * 10, panel.tile * 4, panel.tile * 3/4);
                     removeStudentBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
@@ -405,8 +439,8 @@ public class UI{
                 editNumPlacesBtn.addMouseListener(panel.mouseCtrl); 
                 panel.add(editNumPlacesBtn);
             } else if(panel.currentScreen == panel.asignationInfoScreen){
-                listStudentsBtn = new JButton("Mostrar asignaciones");
-                listStudentsBtn.setBounds(panel.tile * 8, panel.tile * 3, panel.tile * 5, panel.tile * 3/4);
+                listStudentsBtn = new JButton("Ver estudiantes");
+                listStudentsBtn.setBounds(panel.tile * 8, panel.tile * 3, panel.tile * 4, panel.tile * 3/4);
                 listStudentsBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
                 listStudentsBtn.setForeground(Color.white);
                 listStudentsBtn.setFocusPainted(false);
@@ -415,6 +449,17 @@ public class UI{
                 listStudentsBtn.setBackground(new Color(153, 43, 43)); //Rojo
                 listStudentsBtn.addMouseListener(panel.mouseCtrl); 
                 panel.add(listStudentsBtn);
+                
+                asignPlacesBtn = new JButton("Asignar cupos");
+                asignPlacesBtn.setBounds(panel.tile * 19, panel.tile * 3, panel.tile * 4, panel.tile * 3/4);
+                asignPlacesBtn.setFont(defaultFont.deriveFont(Font.PLAIN, 18F));
+                asignPlacesBtn.setForeground(Color.white);
+                asignPlacesBtn.setFocusPainted(false);
+                asignPlacesBtn.setBorder(lineBorder);
+                asignPlacesBtn.setContentAreaFilled(true);
+                asignPlacesBtn.setBackground(new Color(153, 43, 43)); //Rojo
+                asignPlacesBtn.addMouseListener(panel.mouseCtrl); 
+                panel.add(asignPlacesBtn);
             } else if(panel.currentScreen == panel.editAsignationScreen){
                 addStudentBtn = new JButton("Agregar estudiante");
                 addStudentBtn.setBounds(panel.tile * 8, panel.tile * 7, panel.tile * 4, panel.tile * 3/4);
