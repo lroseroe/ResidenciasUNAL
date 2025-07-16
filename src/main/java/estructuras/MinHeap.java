@@ -13,25 +13,13 @@ public class MinHeap{
         size = 0;
     }
 
-    public int getSize(){
-        return size;
-    }
-    public int getPlaces(){
-        return maxSize;
-    }
+    public int getSize(){ return size; }
+    public int getPlaces(){ return maxSize; }
+    public int parent(int i){ return (i-1)/2; }
+    public int leftChild(int i){ return 2*i + 1; }
+    public int rightChild(int i){ return 2*i + 2; }
     
-    public int parent(int i){
-        return (i-1)/2;
-    }
-    
-    public int leftChild(int i){
-        return 2*i + 1;
-    }
-    
-    public int rightChild(int i){
-        return 2*i + 2;
-    }
-    
+
     public void swap(int i, int j){
         Estudiante temp = puntajes[i];
         puntajes[i] = puntajes[j];
@@ -71,21 +59,32 @@ public class MinHeap{
             //throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
         }
         puntajes[size] = item;
+        siftUp(size);
         size++;
-        siftUp(size-1);
     }
 
-    public Estudiante extractMin(){
+    //Si no se utiliza para nada mas, se puede eliminar
+    /*  public Estudiante extractMin(){
         if(size == 0){
             return null;
         }
         
-        Estudiante min = puntajes[0];
-        puntajes[0] = puntajes[size-1];
-        size--;
-        siftDown(0);
-        return min;
-    }
+        while(size >0){
+            Estudiante min = puntajes[0];
+            if(!min.isRemove()){
+                swap(0, size-1);
+                size--;
+                siftDown(0);
+                return min;
+            }else{
+                swap(0, size-1);
+                size--;
+                siftDown(0);
+            }
+        }
+
+        return null;
+    }*/
     
     public void remove(Estudiante estudiante){
         int i = findIndex(estudiante);
@@ -93,19 +92,7 @@ public class MinHeap{
             throw new RuntimeException("El estudiante no se encuentra registrado."); 
         }
 
-        puntajes[i] = puntajes[0]; //Ponerlo de primero obligatoriamente
-        siftUp(i);
-        extractMin();
-    }
-
-    public boolean find(Estudiante estudiante){
-        for(int i=0; i<size; i++){
-            if(puntajes[i].equals(estudiante)){
-                return true;
-            }
-        }
-        
-        return false;
+        puntajes[i].setRemove();
     }
 
     public int findIndex(Estudiante estudiante){
@@ -114,23 +101,19 @@ public class MinHeap{
                 return i;
             }
         }
-
         return -1;
     }
     
     public void changePriority(Estudiante estudiante, int nuevoPuntaje){
-        int index = -1;
-        for(int i=0; i<size; i++){
-            if(puntajes[i].equals(estudiante)){
-                index = i;
-                break;
-            }
-        }
+        int index = findIndex(estudiante);
+
         if(index == -1){
             throw new RuntimeException("El estudiante no se encuentra en el sistema");
         }
+
         int viejoPuntaje = estudiante.getPuntaje();
         estudiante.setPuntaje(nuevoPuntaje);
+
         if(nuevoPuntaje<viejoPuntaje){
             siftUp(index);
         } else {
@@ -138,14 +121,12 @@ public class MinHeap{
         }
     }
 
-    public void print(){
-        System.out.println("Estudiantes en el sistema: ");
-        for(int i = 0;i<size;i++){
-            System.out.println(puntajes[i].getNombre() + " " + puntajes[i].getID() + " " + puntajes[i].getPuntaje() + " " + puntajes[i].getApoyo());
-        }
-
-        System.out.println();
+    public Estudiante[] array(){
+        Estudiante[] result = new Estudiante[size];
+        System.arraycopy(puntajes, 0, result, 0, size);
+        return result;
     }
+
 }
 
 

@@ -6,6 +6,7 @@ public class Estudiante{
     String nombre;
     int puntaje;
     public boolean tieneApoyo;
+    public boolean eliminado = false;
 
     public Estudiante(){
         this.id=9999999999L;
@@ -45,5 +46,13 @@ public class Estudiante{
 
     public int compareTo(Estudiante otro){
         return Integer.compare(this.puntaje, otro.puntaje);
+    }
+
+    public boolean isRemove(){
+        return eliminado;
+    }
+
+    public void setRemove(){
+        this.eliminado = true;
     }
 }
