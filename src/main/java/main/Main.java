@@ -39,6 +39,11 @@ public class Main {
         heap.insert(estudiante5);
         heap.insert(estudiante6);
         heap.insert(estudiante7);
+        
+        heap.printHeap();
+        
+        int i = estudiante4.getHeapIndex();
+        System.out.println("Indice: " + i);
 
         Estudiante[] lista = heap.array();
         HeapSort arrayOrdenado = new HeapSort(lista);

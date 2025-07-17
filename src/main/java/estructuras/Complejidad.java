@@ -38,7 +38,7 @@ public class Complejidad {
             exec(size-1, "MinHeap - insert", value -> minHeap.insert(estudiantePrueba1));
             exec(1, "MinHeap - insert", value -> minHeap.insert(estudiantePrueba2));
             exec(size, "MinHeap - changePriority", value -> minHeap.changePriority(estudiantePrueba2, 80));
-            exec(size, "MinHeap - findIndex", value -> minHeap.findIndex(estudiantePrueba2));
+            //exec(size, "MinHeap - findIndex", value -> minHeap.findIndex(estudiantePrueba2));
             exec(size-1, "MinHeap - remove", value -> minHeap.remove(estudiantePrueba1));
             exec(1, "MinHeap - remove", value -> minHeap.remove(estudiantePrueba2));
             System.out.println();

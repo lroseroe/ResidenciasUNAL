@@ -24,6 +24,9 @@ public class MinHeap{
         Estudiante temp = estudiantesArray[i];
         estudiantesArray[i] = estudiantesArray[j];
         estudiantesArray[j] = temp;
+        
+        estudiantesArray[i].setHeapIndex(i);
+        estudiantesArray[j].setHeapIndex(j);
     }
     
     public void siftUp(int i){
@@ -59,6 +62,7 @@ public class MinHeap{
             //throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
         }
         estudiantesArray[size] = item;
+        estudiantesArray[size].setHeapIndex(size);
         siftUp(size);
         size++;
     }
@@ -86,14 +90,15 @@ public class MinHeap{
     }
     
     public void remove(Estudiante estudiante){
-        int i = findIndex(estudiante);
+        int i = estudiante.getHeapIndex();
         if(i < 0 || i > size - 1){
             throw new RuntimeException("El estudiante no se encuentra registrado."); 
         }
 
         estudiantesArray[i].setRemove();
     }
-
+    
+    /*
     public int findIndex(Estudiante estudiante){
         for(int i=0; i<size; i++){
             if(estudiantesArray[i].equals(estudiante)){
@@ -102,9 +107,10 @@ public class MinHeap{
         }
         return -1;
     }
+    */
     
     public void changePriority(Estudiante estudiante, int nuevoPuntaje){
-        int index = findIndex(estudiante);
+        int index = estudiante.getHeapIndex();
 
         if(index == -1){
             throw new RuntimeException("El estudiante no se encuentra en el sistema");
@@ -124,6 +130,14 @@ public class MinHeap{
         Estudiante[] result = new Estudiante[size];
         System.arraycopy(estudiantesArray, 0, result, 0, size);
         return result;
+    }
+    
+    public void printHeap(){
+        for (int i = 0; i < size; ++i) {
+            System.out.println(estudiantesArray[i].getNombre() + "--" + estudiantesArray[i].getID() + "--" + estudiantesArray[i].getPuntaje() +
+                    "--" + estudiantesArray[i].getApoyo());
+        }
+        System.out.println();
     }
 
 }

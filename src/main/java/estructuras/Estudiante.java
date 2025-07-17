@@ -6,6 +6,7 @@ public class Estudiante{
     int puntaje;
     public boolean tieneApoyo;
     public boolean eliminado = false;
+    public int heapIndex;
 
     public Estudiante(){
         this.id=9999999999L;
@@ -19,6 +20,14 @@ public class Estudiante{
         this.nombre=nombre;
         this.puntaje=puntaje;
         this.tieneApoyo=false;
+    }
+
+    public int getHeapIndex() {
+        return heapIndex;
+    }
+
+    public void setHeapIndex(int heapIndex) {
+        this.heapIndex = heapIndex;
     }
 
     public long getID(){
