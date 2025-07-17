@@ -72,7 +72,7 @@ public class MinHeap{
             return null;
         }
         
-        while(size >0){
+        while(size>0){
             Estudiante min = estudiantesArray[0];
             if(!min.isRemove()){
                 swap(0, size-1);

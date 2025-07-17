@@ -12,7 +12,7 @@ public class HeapSort {
         this.estudiantes = estudiantes;
     }
 
-    public void heapSort(int x){
+    public void heapSort(){
 
         estudiantes = Arrays.stream(estudiantes)
                       .filter(e -> e != null && !e.isRemove())
@@ -20,16 +20,40 @@ public class HeapSort {
         
         int n = estudiantes.length;
         
-        for(int i = 0 ; i<n ; i++){
-            estudiantes[i].setApoyo(false); //Reiniciar el apoyo de los estudiantes
-        }
         for (int i = n / 2 - 1; i >= 0; i--) {
             heapify(n, i);
         }
 
         // Extraer elementos del heap uno por uno
         for (int i = n - 1; i > 0; i--) {
+            
+            // Mover la raíz actual al final
+            Estudiante temp = estudiantes[0];
+            estudiantes[0] = estudiantes[i];
+            estudiantes[i] = temp;
 
+            // Llamar heapify en el heap reducido
+            heapify(i, 0);
+        }
+    }
+
+    //HeapSort pero reiniciando el estado del apoyo de los estudiantes
+    public void heapSort2(){
+
+        estudiantes = Arrays.stream(estudiantes)
+                      .filter(e -> e != null && !e.isRemove())
+                      .toArray(Estudiante[]::new);
+        
+        int n = estudiantes.length;
+
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            heapify(n, i);
+        }
+
+        // Extraer elementos del heap uno por uno
+        for (int i = n - 1; i > 0; i--) {
+            
+            estudiantes[i].setApoyo(false); //Reiniciar el apoyo de los estudiantes
             // Mover la raíz actual al final
             Estudiante temp = estudiantes[0];
             estudiantes[0] = estudiantes[i];
@@ -39,7 +63,7 @@ public class HeapSort {
             heapify(i, 0);
         }
 
-        asignarCupos(x);
+        //asignarCupos(x);
     }
 
     public void heapify(int n, int i) {
@@ -77,7 +101,7 @@ public class HeapSort {
     public void asignarCupos(int n){
         int cuposAsignados = 0;
         for(int i =0; cuposAsignados < n && i < estudiantes.length; i++){
-            if(estudiantes[i] != null && !estudiantes[i].isRemove() && !estudiantes[i].getApoyo()){
+            if(estudiantes[i] != null && !estudiantes[i].getApoyo()){
                 estudiantes[i].setApoyo(true);
                 cuposAsignados++;
             }

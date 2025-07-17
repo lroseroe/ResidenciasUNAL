@@ -1,8 +1,8 @@
 package main;
 
 import estructuras.Estudiante;
-import estructuras.MinHeap;
 import estructuras.HeapSort;
+import estructuras.MinHeap;
 //import ResidenciasUnalHash;
 
 public class Main {
@@ -42,22 +42,22 @@ public class Main {
         
         heap.printHeap();
         
-        int i = estudiante4.getHeapIndex();
+        int i = estudiante7.getHeapIndex();
         System.out.println("Indice: " + i);
 
         Estudiante[] lista = heap.array();
         HeapSort arrayOrdenado = new HeapSort(lista);
-
-        arrayOrdenado.heapSort(2);
-        arrayOrdenado.printEstudiantes();
+        
+        //arrayOrdenado.heapSort();
+        //arrayOrdenado.asignarCupos(4);
+        //arrayOrdenado.printEstudiantes();
 
         heap.changePriority(estudiante6, 10);
         heap.changePriority(estudiante2, 9);
-        heap.remove(estudiante1);
-        heap.insert(estudiante8); //Mirar si se puede insertar y hacer HeapSort sin tener que volver a crear el objeto HeapSort(lista)
-
-        arrayOrdenado.heapSort(6);
-        
+        heap.remove(estudiante1);  
+        heap.insert(estudiante8);
+        arrayOrdenado.heapSort2();
+        arrayOrdenado.asignarCupos(4);
         arrayOrdenado.printEstudiantes();
     }        
 }
