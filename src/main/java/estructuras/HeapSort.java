@@ -78,7 +78,6 @@ public class HeapSort {
         int cuposAsignados = 0;
         for(int i =0; cuposAsignados < n && i < estudiantes.length; i++){
             if(estudiantes[i] != null && !estudiantes[i].isRemove() && !estudiantes[i].getApoyo()){
-                
                 estudiantes[i].setApoyo(true);
                 cuposAsignados++;
             }

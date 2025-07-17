@@ -3,13 +3,13 @@ package estructuras;
 //el llamado minHeap.insert(estudiante);
 
 public class MinHeap{
-    Estudiante[] puntajes;
+    Estudiante[] estudiantesArray;
     int maxSize;
     int size;
     
     public MinHeap(int maxSize){
         this.maxSize = maxSize;
-        this.puntajes = new Estudiante[maxSize];
+        this.estudiantesArray = new Estudiante[maxSize];
         size = 0;
     }
 
@@ -21,13 +21,13 @@ public class MinHeap{
     
 
     public void swap(int i, int j){
-        Estudiante temp = puntajes[i];
-        puntajes[i] = puntajes[j];
-        puntajes[j] = temp;
+        Estudiante temp = estudiantesArray[i];
+        estudiantesArray[i] = estudiantesArray[j];
+        estudiantesArray[j] = temp;
     }
     
     public void siftUp(int i){
-        while(i > 0 && puntajes[parent(i)].compareTo(puntajes[i]) > 0){ //Si el padre es mayor, hay que hacer swap
+        while(i > 0 && estudiantesArray[parent(i)].compareTo(estudiantesArray[i]) > 0){ //Si el padre es mayor, hay que hacer swap
            
             swap(parent(i), i);
             i = parent(i);
@@ -39,11 +39,11 @@ public class MinHeap{
         int left = leftChild(i);
         int right = rightChild(i);
 
-        if(left < size && puntajes[left].compareTo(puntajes[minIndex]) < 0){
+        if(left < size && estudiantesArray[left].compareTo(estudiantesArray[minIndex]) < 0){
             minIndex = left;
         }
     
-        if(right < size && puntajes[right].compareTo(puntajes[minIndex]) < 0){
+        if(right < size && estudiantesArray[right].compareTo(estudiantesArray[minIndex]) < 0){
             minIndex = right;
         }
         
@@ -58,19 +58,18 @@ public class MinHeap{
             return;
             //throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
         }
-        puntajes[size] = item;
+        estudiantesArray[size] = item;
         siftUp(size);
         size++;
     }
 
-    //Si no se utiliza para nada mas, se puede eliminar
-    /*  public Estudiante extractMin(){
+    public Estudiante extractMin(){
         if(size == 0){
             return null;
         }
         
         while(size >0){
-            Estudiante min = puntajes[0];
+            Estudiante min = estudiantesArray[0];
             if(!min.isRemove()){
                 swap(0, size-1);
                 size--;
@@ -84,7 +83,7 @@ public class MinHeap{
         }
 
         return null;
-    }*/
+    }
     
     public void remove(Estudiante estudiante){
         int i = findIndex(estudiante);
@@ -92,12 +91,12 @@ public class MinHeap{
             throw new RuntimeException("El estudiante no se encuentra registrado."); 
         }
 
-        puntajes[i].setRemove();
+        estudiantesArray[i].setRemove();
     }
 
     public int findIndex(Estudiante estudiante){
         for(int i=0; i<size; i++){
-            if(puntajes[i].equals(estudiante)){
+            if(estudiantesArray[i].equals(estudiante)){
                 return i;
             }
         }
@@ -123,7 +122,7 @@ public class MinHeap{
 
     public Estudiante[] array(){
         Estudiante[] result = new Estudiante[size];
-        System.arraycopy(puntajes, 0, result, 0, size);
+        System.arraycopy(estudiantesArray, 0, result, 0, size);
         return result;
     }
 

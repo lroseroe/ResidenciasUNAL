@@ -1,6 +1,5 @@
 package estructuras;
 
-
 public class Estudiante{
     long id;
     String nombre;
