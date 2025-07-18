@@ -17,10 +17,11 @@ public class MouseController implements MouseListener{
     
     public boolean studentFound; //Solo para cuando estas buscando un estudiante o agregandolo
     public boolean studentEliminated;
-    public long ID = 0l;
+    public long ID;
     
     public MouseController(MainPanel panel){
         this.panel = panel;
+        ID = 0L;
     }
 
     @Override
@@ -31,30 +32,29 @@ public class MouseController implements MouseListener{
             if(btn == panel.interfaz.searchBtn){
                 searchBtnPressed = true;
                 String IDstr = panel.interfaz.searchBox.getText();
-                if((IDstr == null || !IDstr.matches("-?\\d+(\\.\\d+)?") || Long.parseLong(IDstr) <= 0) || 
-                        Long.parseLong(IDstr) >= 100000000000L){ //Verificar string válido
-                    JOptionPane.showMessageDialog(panel, "Ingrese un ID válido", "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
-                    return;
+                boolean valid = verifyValidLong(IDstr, "Ingrese un ID válido");
+                
+                if(!valid){
+                    return; //Return para que no se borre lo de las cajas de texto
                 } 
+                
                 ID = Long.parseLong(IDstr);
                 Estudiante estudiante = panel.control.buscarEstudiante(ID);
                 studentFound = estudiante != null;
                 studentEliminated = false;
-                
-                if(studentFound){
+
+                if(studentFound){ //Muestra su información en pantalla
                     panel.interfaz.nameFilledText = new JLabel(estudiante.getNombre());
-                    panel.interfaz.IDFilledText = new JLabel(Long.toString(estudiante.getID()));
+                    panel.interfaz.IDFilledText = new JLabel(Long.toString(ID));
                     panel.interfaz.scoreFilledText = new JLabel(Integer.toString(estudiante.getPuntaje()));
                 }
-
             } 
             if(btn == panel.interfaz.removeStudentBtn){
                 int choice = JOptionPane.showConfirmDialog(panel, "¿Está seguro?", "Eliminar estudiante", 
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                
                 if(choice == JOptionPane.YES_OPTION){
-                    studentEliminated = panel.control.eliminarEstudiante(ID);
-                    System.out.println("Eliminado: " + studentEliminated);
-                    System.out.println("ID: " + ID);
+                    studentEliminated = panel.control.eliminarEstudiante(ID);     
                 } 
                 
                 //Si no, solo se cierra la ventanita
@@ -63,18 +63,17 @@ public class MouseController implements MouseListener{
                 String newScoreStr = JOptionPane.showInputDialog(panel, "Ingrese el nuevo puntaje socioeconómico", 
                         "Editar puntaje", JOptionPane.INFORMATION_MESSAGE);
                 
-                if(!newScoreStr.matches("-?\\d+(\\.\\d+)?") || 
-                    Integer.parseInt(newScoreStr) < 0){ //Verificar que el string sea un número válido
-                    JOptionPane.showMessageDialog(panel, "Solo ingrese números positivos", "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
-                    return;
+                boolean valid = verifyValidInteger(newScoreStr, "Ingrese un puntaje socioeconómico válido");
+                if(valid){
+                    int newScore = Integer.parseInt(newScoreStr);
+                    panel.control.actualizarPuntaje(ID, newScore);
+                    panel.interfaz.scoreFilledText.setText(Integer.toString(newScore));
                 } 
-                
-                int newScore = Integer.parseInt(newScoreStr);
-                panel.control.actualizarPuntaje(ID, newScore);
-                panel.interfaz.scoreFilledText.setText(Integer.toString(newScore));
  
             }
-        } else if(panel.currentScreen == panel.residenceAvailabilityScreen){
+        } 
+        
+        if(panel.currentScreen == panel.residenceAvailabilityScreen){
             if(btn == panel.interfaz.checkAvailabiltyBtn){
                 checkAvailabiltyBtnPressed = true;
             } else if(btn == panel.interfaz.editNumPlacesBtn){
@@ -82,28 +81,30 @@ public class MouseController implements MouseListener{
                 
                 String newNumPlacesStr = JOptionPane.showInputDialog(panel, "Ingrese la nueva cantidad de cupos", 
                         "Editar total de cupos", JOptionPane.INFORMATION_MESSAGE);
-                if(newNumPlacesStr != null && newNumPlacesStr.matches("-?\\d+(\\.\\d+)?") && 
-                        Integer.parseInt(newNumPlacesStr) >= 0 ){ //Verificar que el string sea un número válido
+                
+                boolean valid = verifyValidInteger(newNumPlacesStr, "Ingrese un número de cupos válido");
+                if(valid){
                     int newNumPlaces = Integer.parseInt(newNumPlacesStr);
-                    panel.totalResidences = newNumPlaces;
-                    panel.availableResidences = panel.totalResidences - panel.takenResidences; //Actualizar variable
-                    
-                    //También se debería actualizar la asignación de cupos con el heap
- 
-                } else {
-                    JOptionPane.showMessageDialog(panel, "Solo ingrese números positivos", "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
-                    return;
+                    panel.control.cambiarNumCupos(newNumPlaces);
                 }
             } 
-        } else if(panel.currentScreen == panel.asignationInfoScreen){
+        } 
+        
+        if(panel.currentScreen == panel.asignationInfoScreen){
             if(btn == panel.interfaz.listStudentsBtn){
                 listStudentsBtnPressed = true;
                 asignPlacesBtnPressed = false;
+                
+                panel.control.ordenarEstudiantes();
             } else if(btn == panel.interfaz.asignPlacesBtn){
                 asignPlacesBtnPressed = true;
                 listStudentsBtnPressed = false; 
+                
+                panel.control.asignarCupos();
             }
-        } else if(panel.currentScreen == panel.editAsignationScreen){
+        } 
+        
+        if(panel.currentScreen == panel.editAsignationScreen){
             if(btn == panel.interfaz.addStudentBtn){
                 addStudentBtnPressed = true;
                 
@@ -117,47 +118,54 @@ public class MouseController implements MouseListener{
                             "Error: Panel vacío", JOptionPane.ERROR_MESSAGE);
                     //return para no actualizar componentes aún
                     return;
-                } else {
-                    String names = panel.interfaz.studentNamesBox.getText();
-                    String lastNames = panel.interfaz.studentLastNamesBox.getText();
-                    String ID_str = panel.interfaz.studentIDBox.getText();
-                    String score_str = panel.interfaz.studentScoreBox.getText();
-                    
-                    long ID;
-                    int score;
-                    
-                    if(ID_str.matches("-?\\d+(\\.\\d+)?") && Long.parseLong(ID_str) > 0){
-                        ID = Long.parseLong(ID_str);
-                    } else {
-                        JOptionPane.showMessageDialog(panel, "Ingrese un ID válido", 
-                            "Error: Entrada no válida", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(score_str.matches("-?\\d+(\\.\\d+)?") && Long.parseLong(score_str) > 0){
-                        score = Integer.parseInt(score_str);
-                    } else {
-                        JOptionPane.showMessageDialog(panel, "Ingrese un puntaje socioeconómico válido", 
-                            "Error: Entrada no válida", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    //Luego de todas las verificaciones, agregamos el estudiante
-                    studentFound = !panel.control.insertarEstudiante(ID, names + " " + lastNames, score);
-                    if(studentFound){
-                        JOptionPane.showMessageDialog(panel, "Este estudiante ya está registrado en el sistema.", 
-                            "Error: Estudiante encontrado", JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(panel, "Estudiante registrado con éxito.", 
-                            "Estudiante registrado", JOptionPane.INFORMATION_MESSAGE);
-                    }
                 } 
+                String names = panel.interfaz.studentNamesBox.getText();
+                String lastNames = panel.interfaz.studentLastNamesBox.getText();
+                String ID_str = panel.interfaz.studentIDBox.getText();
+                String score_str = panel.interfaz.studentScoreBox.getText();
+
+                
+                
+                boolean validID = verifyValidLong(ID_str, "Ingrese un ID válido");
+                boolean validScore = verifyValidLong(ID_str, "Ingrese un puntaje socioeconómico válido");
+                if(!validID || !validScore){
+                    return;
+                }
+                
+                long IDnumber = Long.parseLong(ID_str);
+                int score = Integer.parseInt(score_str);
+
+                studentFound = !panel.control.insertarEstudiante(IDnumber, names + " " + lastNames, score);
+                if(studentFound){
+                    JOptionPane.showMessageDialog(panel, "Este estudiante ya está registrado en el sistema.", 
+                        "Error: Estudiante encontrado", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(panel, "Estudiante registrado con éxito.", 
+                        "Estudiante registrado", JOptionPane.INFORMATION_MESSAGE);
+                }
+                
             }
         }
         
         //Actualizar componentes
         panel.interfaz.updateScreen();
 
+    }
+    
+    public boolean verifyValidLong(String str, String message){
+        if((str == null || !str.matches("-?\\d+(\\.\\d+)?") || Long.parseLong(str) < 0)){ //Verificar string válido
+            JOptionPane.showMessageDialog(panel, message, "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } 
+        return true;
+    }
+    
+    public boolean verifyValidInteger(String str, String message){
+        if((str == null || !str.matches("-?\\d+(\\.\\d+)?") || Integer.parseInt(str) < 0)){ //Verificar string válido
+            JOptionPane.showMessageDialog(panel, message, "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);
+            return false;
+        } 
+        return true;
     }
     
     boolean checkTextFieldEmpty(JTextField box){

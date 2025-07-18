@@ -35,7 +35,7 @@ public class MainPanel extends JPanel{
     
     MouseController mouseCtrl = new MouseController(this);
     UI interfaz = new UI(this);
-    SystemControl control = new SystemControl(100); //Temporalmente el máximo es 100
+    SystemControl control = new SystemControl(10000000, this); //Máximo 10 millones de cupos
             
     public MainPanel(){
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));

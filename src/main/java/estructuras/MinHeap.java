@@ -1,101 +1,138 @@
 package estructuras;
 
-public class MinHeap<T extends Comparable<T>>{
-    T[] array;
+//el llamado minHeap.insert(estudiante);
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import residenciasunalhash.Estudiante;
+
+
+public class MinHeap{
+    Estudiante[] estudiantesArray;
     int maxSize;
     int size;
+    private final Map<Estudiante, Integer> indexMap = new HashMap<>(); //Mapa auxiliar para los indices
     
-    public MinHeap(int n){
-        maxSize = n;
-        array = (T[]) new Comparable[maxSize];
+    public MinHeap(int maxSize){
+        this.maxSize = maxSize;
+        this.estudiantesArray = new Estudiante[maxSize];
         size = 0;
-    }
-    
-    public int parent(int i){
-        return (i-1)/2;
-    }
-    
-    public int leftChild(int i){
-        return 2*i + 1;
-    }
-    
-    public int rightChild(int i){
-        return 2*i + 2;
-    }
-    
-    public void swap(int i, int j){
-        T temp = array[j];
-        array[j] = array[i];
-        array[i] = temp;
         
+    }
+
+    public Estudiante[] getEstudiantesArray() { return estudiantesArray; }
+    public int getSize(){ return size; }
+    public int getPlaces(){ return maxSize; }
+    public int parent(int i){ return (i-1)/2; }
+    public int leftChild(int i){ return 2*i + 1; }
+    public int rightChild(int i){ return 2*i + 2; }
+    
+
+    public void swap(int i, int j){
+        Estudiante temp = estudiantesArray[i];
+        estudiantesArray[i] = estudiantesArray[j];
+        estudiantesArray[j] = temp;
+        
+        indexMap.put(estudiantesArray[i], i);
+        indexMap.put(estudiantesArray[j], j);
     }
     
     public void siftUp(int i){
-        while(i > 0 && array[parent(i)].compareTo(array[i]) > 0){ //Si el padre es mayor, hay que hacer swap
-            swap(i, parent(i));
+        while(i > 0 && estudiantesArray[parent(i)].compareTo(estudiantesArray[i]) > 0){ //Si el padre es mayor, hay que hacer swap
+            swap(parent(i), i);
             i = parent(i);
         }
     }
     
     public void siftDown(int i){
-        int maxIndex = i;
-        
+        int minIndex = i;
         int left = leftChild(i);
-        if(left < size && array[left].compareTo(array[maxIndex]) < 0){
-            maxIndex = left;
-        }
-        
         int right = rightChild(i);
-        if(right < size && array[right].compareTo(array[maxIndex]) < 0){
-            maxIndex = right;
+
+        if(left < size && estudiantesArray[left].compareTo(estudiantesArray[minIndex]) < 0){
+            minIndex = left;
+        }
+    
+        if(right < size && estudiantesArray[right].compareTo(estudiantesArray[minIndex]) < 0){
+            minIndex = right;
         }
         
-        if(i != maxIndex){
-            swap(i, maxIndex);
-            siftDown(maxIndex);
+        if(i != minIndex){
+            swap(i, minIndex);
+            siftDown(minIndex);
         }
     }
     
-    public void insert(T item){
+    public void insert(Estudiante item){
         if(size == maxSize){
-            throw new RuntimeException("Heap is full.");
+            return;
+            //throw new RuntimeException("No existen más cupos disponibles."); //Cupos disponibles
         }
-        array[size] = item;
+        estudiantesArray[size] = item;
+        indexMap.put(item, size);
         siftUp(size);
-        size ++;
+        size++;
     }
-    
-    public T extractMin(){
-        T result = array[0];
-        array[0] = array[--size];
-        siftDown(0);
-        return result;
-    }
-    
-    public void remove(int i){
-        if(i < 0 || i > size - 1){
-            throw new RuntimeException("Index not in Heap.");
+
+    public Estudiante extractMin(){
+        if(size == 0){
+            return null;
         }
-        array[i] = array[0]; //Ponerlo de primero obligatoriamente
-        siftUp(i);
-        extractMin();
+        
+        if (size == 0) return null;
+        Estudiante min = estudiantesArray[0];
+        remove(min); 
+        return min;
     }
     
-    public void changePriority(int i, T item){
-        T oldItem = array[i];
-        array[i] = item; //Item es la prioridad
-        if(item.compareTo(oldItem) > 0){
+    
+    public void remove(Estudiante estudiante){
+        int i = indexMap.get(estudiante);
+        if(i < 0 || i > size - 1 || estudiantesArray[i] != estudiante){
+            throw new RuntimeException("El estudiante no se encuentra registrado."); 
+        }
+        
+        swap(i, size - 1);
+        indexMap.remove(estudiantesArray[size - 1]);
+        estudiantesArray[size - 1].setRemove();
+        estudiantesArray[size - 1] = null;
+        size--;
+
+        if (i < size) {
             siftUp(i);
-        } else {
             siftDown(i);
         }
     }
     
-    //Para testeos
-    public void print(){
-        for(int i = 0; i < size; i++){
-            System.out.print(array[i] + " ");
+    public void changePriority(Estudiante estudiante, int nuevoPuntaje){
+        int index = indexMap.get(estudiante);
+
+        if(index == -1){
+            throw new RuntimeException("El estudiante no se encuentra en el sistema");
+        }
+
+        int viejoPuntaje = estudiante.getPuntaje();
+        estudiante.setPuntaje(nuevoPuntaje);
+
+        if(nuevoPuntaje<viejoPuntaje){
+            siftUp(index);
+        } else {
+            siftDown(index);
+        }
+    }
+
+    
+    public void printHeap(){
+        for (int i = 0; i < size; ++i) {
+            System.out.println(estudiantesArray[i].getNombre() + "--" + estudiantesArray[i].getID() + "--" + estudiantesArray[i].getPuntaje() +
+                    "--" + estudiantesArray[i].getApoyo());
         }
         System.out.println();
     }
+
 }
+
+

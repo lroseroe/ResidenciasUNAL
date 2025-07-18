@@ -127,20 +127,6 @@ public class MyHashMap {
         }
     }
 
-    // Importar estudiantes desde un archivo CSV
-    public void cargarDesdeCSV(String nombreArchivo) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
-            String linea;
-            while ((linea = reader.readLine()) != null) {
-                Estudiante est = Estudiante.fromCSV(linea);
-                put(est.getID(), est);
-            }
-            System.out.println("Datos cargados desde: " + nombreArchivo);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
     public int getTamano(){
         return tamano;
     }

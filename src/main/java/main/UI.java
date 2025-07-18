@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
@@ -111,84 +110,101 @@ public class UI{
     
     public void drawTable(){
         if(panel.mouseCtrl.listStudentsBtnPressed){
-            try{
-                InputStream file = getClass().getResourceAsStream("/test.csv");
-                JTable table = CSVLoader.loadCSV(file);
-                table.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
-                table.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
-                table.getTableHeader().setBackground(new Color(153, 43, 43));
-                table.getTableHeader().setForeground(Color.white);
-                
-                table.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
-                table.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
-                table.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
-                table.removeColumn(table.getColumnModel().getColumn(3));
-                
-                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
-                centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-                
-                table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-                table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-                table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-
-                
-                JScrollPane scroll = new JScrollPane(table);
-                scroll.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
-                panel.add(scroll);
-                
-            } catch(Exception e){
-                e.printStackTrace();
+            Object[][] data = new Object[panel.control.heapSort.getEstudiantes().length][4]; //Array ya ordenado
+            for (int i = 0; i < panel.control.heapSort.getEstudiantes().length; i++) {
+                if(panel.control.heapSort.getEstudiantes()[i] != null){
+                    data[i][0] = panel.control.heapSort.getEstudiantes()[i].getNombre();
+                    data[i][1] = panel.control.heapSort.getEstudiantes()[i].getID();
+                    data[i][2] = panel.control.heapSort.getEstudiantes()[i].getPuntaje();
+                    data[i][3] = panel.control.heapSort.getEstudiantes()[i].getApoyo();
+                }
             }
+            String[] columnNames = {"Nombre", "ID", "Puntaje"};
+            JTable table = new JTable(data, columnNames);
             
-        } else if(panel.mouseCtrl.asignPlacesBtnPressed){
-            try{
-                InputStream file = getClass().getResourceAsStream("/test.csv");
-                JTable table1 = CSVLoader.loadCSV(file);
-                table1.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
-                table1.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
-                table1.getTableHeader().setBackground(new Color(153, 43, 43));
-                table1.getTableHeader().setForeground(Color.white);
-                
-                table1.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
-                table1.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
-                table1.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
-                table1.getColumnModel().getColumn(3).setPreferredWidth(panel.tile / 2); //Si tiene residencia o no
-                
-                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
-                centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-                
-                //Para pintar las celdas verde si dice SI, rojo si dice NO
-                DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer(){
-                    @Override
-                    public Component getTableCellRendererComponent(JTable table, Object value, 
-                       boolean isSelected, boolean hasFocus, 
-                       int row, int col){
-                       Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col); //Obtener celda
+            table.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
+            table.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
+            table.getTableHeader().setBackground(new Color(153, 43, 43));
+            table.getTableHeader().setForeground(Color.white);
 
-                       if (value.toString().equals("SI")){
-                          c.setBackground(new Color(163, 255, 118)); //Verde
-                       }else  
-                          c.setBackground(new Color(255, 118, 118)); //Rojo
-                       
-                       setHorizontalAlignment(SwingConstants.CENTER);
-                       return c;
+            table.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
+            table.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
+            table.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
+
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
+            centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+            table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+            table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+
+
+            JScrollPane scroll = new JScrollPane(table);
+            scroll.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
+            panel.add(scroll);
+        } else if(panel.mouseCtrl.asignPlacesBtnPressed){
+            Object[][] data1 = new Object[panel.control.heapSort.getEstudiantes().length][4]; //Array ya ordenado
+            for (int i = 0; i < panel.control.heapSort.getEstudiantes().length; i++) {
+                if(panel.control.heapSort.getEstudiantes()[i] != null){
+                    data1[i][0] = panel.control.heapSort.getEstudiantes()[i].getNombre();
+                    data1[i][1] = panel.control.heapSort.getEstudiantes()[i].getID();
+                    data1[i][2] = panel.control.heapSort.getEstudiantes()[i].getPuntaje();
+                    data1[i][3] = panel.control.heapSort.getEstudiantes()[i].getApoyo();
+                }
+            }
+            String[] columnNames = {"Nombre", "ID", "Puntaje", "Apoyo"};
+            JTable table1 = new JTable(data1, columnNames);
+            
+            table1.setFont(defaultFont.deriveFont(Font.PLAIN, 15F));
+            table1.getTableHeader().setFont(defaultFont.deriveFont(Font.BOLD, 15F));
+            table1.getTableHeader().setBackground(new Color(153, 43, 43));
+            table1.getTableHeader().setForeground(Color.white);
+
+            table1.getColumnModel().getColumn(0).setPreferredWidth(panel.tile * 6); // Nombre
+            table1.getColumnModel().getColumn(1).setPreferredWidth(panel.tile);  // ID
+            table1.getColumnModel().getColumn(2).setPreferredWidth(panel.tile); // Puntaje
+            table1.getColumnModel().getColumn(3).setPreferredWidth(panel.tile / 2); //Si tiene residencia o no
+
+            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer(); //Para centrar texto
+            centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+            //Para pintar las celdas verde si dice SI, rojo si dice NO
+            DefaultTableCellRenderer colorRenderer = new DefaultTableCellRenderer(){
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value, 
+                    boolean isSelected, boolean hasFocus, 
+                    int row, int col){
+                    JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col); //Obtener celda
+                    
+                    if(value != null){
+                        if (Boolean.TRUE.equals(value)){
+                            c.setText("Aprobado");
+                            c.setBackground(new Color(163, 255, 118)); //Verde
+
+                        } else { 
+                            c.setText("Rechazado");
+                            c.setBackground(new Color(255, 118, 118)); //Rojo
+                        }
+                    } else {
+                        c.setBackground(Color.white);
                     }
                     
-                    
-                };
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                    return c;
+                }
+            };
+            
+
+            table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+            table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+            table1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+            table1.getColumnModel().getColumn(3).setCellRenderer(colorRenderer);
+
+            JScrollPane scroll1 = new JScrollPane(table1);
+            scroll1.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
+            panel.add(scroll1);
                 
-                table1.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-                table1.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
-                table1.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
-                table1.getColumnModel().getColumn(3).setCellRenderer(colorRenderer);
-                
-                JScrollPane scroll1 = new JScrollPane(table1);
-                scroll1.setBounds(panel.tile * 8, panel.tile * 9/2, panel.tile * 15, panel.tile * 7);
-                panel.add(scroll1);
-                
-            } catch(Exception e){
-                e.printStackTrace();
-            }
+            
         }
     }
     
@@ -392,7 +408,6 @@ public class UI{
                 searchBtn.addMouseListener(panel.mouseCtrl); 
                 panel.add(searchBtn);
                 
-                System.out.println("Eliminado actual: " + panel.mouseCtrl.studentEliminated);
                 if(panel.mouseCtrl.searchBtnPressed && panel.mouseCtrl.studentFound && !panel.mouseCtrl.studentEliminated){
                     removeStudentBtn = new JButton("Eliminar estudiante");
                     removeStudentBtn.setBounds(panel.tile * 14, panel.tile * 10, panel.tile * 4, panel.tile * 3/4);
@@ -524,7 +539,7 @@ public class UI{
     
     //Métodos auxiliares 
     
-     public static void addPlaceholder(JTextField box, String placeholder) {
+    public void addPlaceholder(JTextField box, String placeholder) {
         box.setText(placeholder);
         box.setForeground(Color.GRAY);
 

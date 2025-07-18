@@ -16,6 +16,7 @@ public class Estudiante{
     String nombre;
     int puntaje;
     boolean tieneApoyo;
+    public boolean eliminado = false;
 
     public Estudiante(){
         this.id=9999999999L;
@@ -54,6 +55,24 @@ public class Estudiante{
         return this.tieneApoyo;
     }
     
+    public int compareTo(Estudiante otro){
+        return Integer.compare(this.puntaje, otro.getPuntaje());
+    }
+
+    public boolean isRemove(){
+        return eliminado;
+    }
+
+    public void setRemove(){
+        this.eliminado = true;
+        this.tieneApoyo = false;
+    }
+    
+    public void setRemove(boolean bool){
+        this.eliminado = bool;
+    }
+
+    
      // Método para convertir a CSV
     public String toCSV() {
         String idEnc = CriptoCode.encriptar(String.valueOf(id));
@@ -78,5 +97,10 @@ public class Estudiante{
         return est;
     }
     
+    //Para el indexHash en heap
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
     
 }

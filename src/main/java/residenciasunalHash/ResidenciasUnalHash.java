@@ -12,14 +12,9 @@ import java.util.Scanner;
 
 public class ResidenciasUnalHash {
     
-    public static MyHashMap usuarios = new MyHashMap();
-
-    public static boolean cargarMapa() {
-        usuarios.cargarDesdeCSV("estudiantes");
-        return true;
-    }
+    public MyHashMap usuarios = new MyHashMap();
     
-    public static boolean registrarUsuario(long id, String nombre, int puntaje) {
+    public boolean registrarUsuario(long id, String nombre, int puntaje) {
         if (!usuarios.containsKey(id)) {
             Estudiante miEstudiante = new Estudiante(id,nombre,puntaje);
             usuarios.put(id, miEstudiante);
@@ -34,7 +29,7 @@ public class ResidenciasUnalHash {
         
     }
 
-    public static boolean borrarUsuario(long id) {
+    public boolean borrarUsuario(long id) {
         if (usuarios.containsKey(id)) {
             Estudiante miEstudiante = usuarios.get(id);
             usuarios.erase(id);
@@ -49,14 +44,14 @@ public class ResidenciasUnalHash {
         
     }
     
-    public static int getEstudiantes() {
+    public int getEstudiantes() {
         return usuarios.getTamano();
         /*System.out.println("El estudiante no existe.");*/
         /*Mensaje provisional */
         
     }
     
-    public static boolean cambiarPuntaje(long id, int puntaje) {
+    public boolean cambiarPuntaje(long id, int puntaje) {
         if (usuarios.containsKey(id)) {
             Estudiante miEstudiante = usuarios.get(id);
             miEstudiante.setPuntaje(puntaje);
@@ -71,7 +66,7 @@ public class ResidenciasUnalHash {
         
     }
 
-    public static Estudiante buscarUsuario(long id){
+    public Estudiante buscarUsuario(long id){
         Estudiante miEstudiante;
         if(usuarios.containsKey(id)){
             /*Caso en que se encontro el estudiante */
@@ -95,7 +90,8 @@ public class ResidenciasUnalHash {
         }
     }
     */
-
+    
+    /*
     public static void main(String[] args) {
         cargarMapa();
         Scanner scanner = new Scanner(System.in);
@@ -155,4 +151,5 @@ public class ResidenciasUnalHash {
             }
         }
     }
+    */
 }
