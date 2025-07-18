@@ -1,5 +1,4 @@
 estructuras\Operation.class
-main\CSVLoader.class
 main\UI$2.class
 estructuras\MinHeap.class
 main\Main.class
@@ -13,6 +12,7 @@ main\MouseController.class
 residenciasunalhash\MyHashMap.class
 main\MainPanel.class
 residenciasunalhash\Estudiante.class
+main\Config.class
 residenciasunalhash\ResidenciasUnalHash.class
 main\SystemControl.class
 main\UI.class

@@ -108,23 +108,19 @@ public class MouseController implements MouseListener{
             if(btn == panel.interfaz.addStudentBtn){
                 addStudentBtnPressed = true;
                 
-                //Verificar que los datos ingresados sean válidos
-                //Verficar si alguna caja de texto está vacía
                 if(checkTextFieldEmpty(panel.interfaz.studentNamesBox) ||
                    checkTextFieldEmpty(panel.interfaz.studentLastNamesBox) ||
                    checkTextFieldEmpty(panel.interfaz.studentIDBox) ||
                    checkTextFieldEmpty(panel.interfaz.studentScoreBox)){
-                    JOptionPane.showMessageDialog(panel, "Asegúrese de llenar todos los campos", 
-                            "Error: Panel vacío", JOptionPane.ERROR_MESSAGE);
-                    //return para no actualizar componentes aún
-                    return;
+                   JOptionPane.showMessageDialog(panel, "Asegúrese de llenar todos los campos", 
+                   "Error: Panel vacío", JOptionPane.ERROR_MESSAGE);
+                    return; //return para no actualizar componentes aún
                 } 
+                
                 String names = panel.interfaz.studentNamesBox.getText();
                 String lastNames = panel.interfaz.studentLastNamesBox.getText();
                 String ID_str = panel.interfaz.studentIDBox.getText();
                 String score_str = panel.interfaz.studentScoreBox.getText();
-
-                
                 
                 boolean validID = verifyValidLong(ID_str, "Ingrese un ID válido");
                 boolean validScore = verifyValidLong(ID_str, "Ingrese un puntaje socioeconómico válido");
@@ -152,6 +148,8 @@ public class MouseController implements MouseListener{
 
     }
     
+    
+    //Métodos auxiliares
     public boolean verifyValidLong(String str, String message){
         if((str == null || !str.matches("-?\\d+(\\.\\d+)?") || Long.parseLong(str) < 0)){ //Verificar string válido
             JOptionPane.showMessageDialog(panel, message, "Error. Entrada no válida", JOptionPane.ERROR_MESSAGE);

@@ -47,6 +47,9 @@ public class UI{
     JTextField studentIDBox;
     JTextField studentScoreBox;
     
+    JTextField userBox;
+    JTextField passwordBox;
+    
     //Al buscar un estudiante
     JLabel nameFilledText;
     JLabel IDFilledText; 
@@ -260,7 +263,8 @@ public class UI{
                 }
             }
         } else if(panel.mouseCtrl.checkAvailabiltyBtnPressed){
-            JLabel availabilityText = new JLabel("Hay " + panel.availableResidences + " cupos disponibles.");
+            JLabel availabilityText = new JLabel("Hay " + panel.availableResidences 
+                    + " cupos disponibles de un total de " + panel.totalResidences + " residencias." );
             availabilityText.setBounds(panel.tile * 8, panel.tile * 4, panel.tile * 10, panel.tile * 3/4);
             availabilityText.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
             availabilityText.setForeground(Color.black);
@@ -493,13 +497,13 @@ public class UI{
     public void drawTextFields(){
         //Pantalla de inicio
         if(panel.currentScreen == panel.mainScreen){
-            JTextField userBox = new JTextField(40);
+            userBox = new JTextField(40);
             userBox.setBounds(panel.tile * 65/4 , panel.tile * 5, panel.tile * 47/8, panel.tile * 3/4);
             userBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
             addPlaceholder(userBox, "  Ingrese su usuario");
             panel.add(userBox);
-
-            JTextField passwordBox = new JTextField(40);
+            
+            passwordBox = new JTextField(40);
             passwordBox.setBounds(panel.tile * 65/4 , panel.tile * 13/2, panel.tile * 47/8, panel.tile * 3/4);
             passwordBox.setFont(defaultFont.deriveFont(Font.PLAIN, 16F));
             addPlaceholder(passwordBox, "  Ingrese su contraseña");

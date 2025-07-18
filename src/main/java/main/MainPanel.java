@@ -33,8 +33,10 @@ public class MainPanel extends JPanel{
     
     //Aqui se debería inicializar todo lo del programa principal 
     
+    
     MouseController mouseCtrl = new MouseController(this);
     UI interfaz = new UI(this);
+    Config config = new Config(this);
     SystemControl control = new SystemControl(10000000, this); //Máximo 10 millones de cupos
             
     public MainPanel(){
@@ -45,9 +47,7 @@ public class MainPanel extends JPanel{
         this.setLayout(null);
         
         currentScreen = mainScreen;
-        totalResidences = 500;
-        takenResidences = 0;
-        availableResidences = totalResidences - takenResidences;
+        
     }
     
     @Override

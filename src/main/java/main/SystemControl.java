@@ -11,9 +11,8 @@ import residenciasunalhash.ResidenciasUnalHash;
 public class SystemControl {
     MainPanel panel;
     
-    public boolean arrayOrdenado;
-    public boolean needToReasign = false;
     int MAX_SIZE;
+    boolean arrayOrdenado = false;
     
     ResidenciasUnalHash hashMap;
     MinHeap heap;
@@ -23,7 +22,6 @@ public class SystemControl {
         this.panel = panel;
         
         MAX_SIZE = capacidad_max;
-        arrayOrdenado = true;
         
         hashMap = new ResidenciasUnalHash();
         heap = new MinHeap(MAX_SIZE);
@@ -31,6 +29,7 @@ public class SystemControl {
         
         //Iniciar datos
         cargarDesdeCSV("estudiantes");
+        panel.config.cargarConfig();
     }
     
     
@@ -42,6 +41,8 @@ public class SystemControl {
             if(panel.availableResidences < 0){
                 panel.availableResidences = 0;
             }
+            
+            panel.config.guardarConfig();
         }
     }
     
@@ -64,6 +65,8 @@ public class SystemControl {
             heap.remove(estudiante);
         } 
         
+        panel.takenResidences --;
+        panel.availableResidences = panel.totalResidences - panel.takenResidences;
         arrayOrdenado = false;
         return eliminado;
     }
@@ -77,20 +80,25 @@ public class SystemControl {
         if(puntajeCambiado){
             Estudiante estudiante = buscarEstudiante(id);
             heap.changePriority(estudiante, puntaje);
-        }  
+        }
+        arrayOrdenado = false;
     }
     
     public void ordenarEstudiantes(){
         if(!arrayOrdenado){
+            System.out.println("Ordenando array");
             heapSort.setEstudiantes(heap.getEstudiantesArray()); //Actualizar el array por si hubo cambios en el heap
             heapSort.heapSort();
             heapSort.printEstudiantes();
-        }
+            arrayOrdenado = true;
+        } 
     }
     
     public void asignarCupos(){
         ordenarEstudiantes();
         heapSort.asignarCupos(panel.totalResidences);
+        hashMap.usuarios.guardarComoCSV("estudiantes"); //actualizar el csv
+        panel.config.guardarConfig();
     }
     
     // Importar estudiantes desde un archivo CSV

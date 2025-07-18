@@ -22,21 +22,16 @@ public class HeapSort {
     
 
     public void heapSort(){
-
         estudiantes = Arrays.stream(estudiantes)
                       .filter(e -> e != null && !e.isRemove())
                       .toArray(Estudiante[]::new);
         
         int n = estudiantes.length;
         
-        /*
-        for(int i = 0 ; i<n ; i++){
-            estudiantes[i].setApoyo(false); //Reiniciar el apoyo de los estudiantes
-        }
-        */
         for (int i = n / 2 - 1; i >= 0; i--) {
-            heapify(n, i);
+            heapify(n, i); 
         }
+
 
         // Extraer elementos del heap uno por uno
         for (int i = n - 1; i > 0; i--) {
@@ -90,7 +85,14 @@ public class HeapSort {
     */
     
     public void asignarCupos(int n){ //n es el total de residencias
-        int actualTakenResidences = panel.takenResidences;
+        int actualTakenResidences = 0;
+        for (Estudiante est : estudiantes) {
+            if (est != null && !est.isRemove() && est.getApoyo()) {
+                actualTakenResidences++;
+            }
+        }
+        
+        panel.takenResidences = actualTakenResidences; //Para evitar errores
         
         if(n > actualTakenResidences){ 
             int cuposPorAsignar = n - actualTakenResidences; //Cuando hay cupos disponibles
