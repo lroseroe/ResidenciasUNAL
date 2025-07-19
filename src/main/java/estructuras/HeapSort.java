@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public class HeapSort {
     Estudiante[] estudiantes;
-
     public HeapSort(Estudiante[] estudiantes){
         if(estudiantes == null || estudiantes.length == 0){
             throw new IllegalArgumentException("No hay estudiantes registrados para ordenar.");
@@ -12,12 +11,7 @@ public class HeapSort {
         this.estudiantes = estudiantes;
     }
 
-    public void heapSort(){
-
-        estudiantes = Arrays.stream(estudiantes)
-                      .filter(e -> e != null && !e.isRemove())
-                      .toArray(Estudiante[]::new);
-        
+    public void heapSort(){      
         int n = estudiantes.length;
         
         for (int i = n / 2 - 1; i >= 0; i--) {
@@ -26,7 +20,7 @@ public class HeapSort {
 
         // Extraer elementos del heap uno por uno
         for (int i = n - 1; i > 0; i--) {
-            
+
             // Mover la raíz actual al final
             Estudiante temp = estudiantes[0];
             estudiantes[0] = estudiantes[i];
@@ -37,7 +31,7 @@ public class HeapSort {
         }
     }
 
-    //HeapSort pero reiniciando el estado del apoyo de los estudiantes
+    //HeapSort reiniciando el estado del apoyo de los estudiantes
     public void heapSort2(){
 
         estudiantes = Arrays.stream(estudiantes)
@@ -62,8 +56,6 @@ public class HeapSort {
             // Llamar heapify en el heap reducido
             heapify(i, 0);
         }
-
-        //asignarCupos(x);
     }
 
     public void heapify(int n, int i) {
@@ -91,13 +83,6 @@ public class HeapSort {
         }
     }
 
-    public void printEstudiantes() {
-        for (int i = 0; i < estudiantes.length; ++i) {
-            System.out.println(estudiantes[i].getNombre() + "--" + estudiantes[i].getID() + "--" + estudiantes[i].getPuntaje() + "--" + estudiantes[i].getApoyo());
-        }
-        System.out.println();
-    }
-
     public void asignarCupos(int n){
         int cuposAsignados = 0;
         for(int i =0; cuposAsignados < n && i < estudiantes.length; i++){
@@ -106,5 +91,12 @@ public class HeapSort {
                 cuposAsignados++;
             }
         }
+    }
+
+    public void printEstudiantes() {
+        for (int i = 0; i < estudiantes.length; ++i) {
+            System.out.println(estudiantes[i].getNombre() + "--" + estudiantes[i].getID() + "--" + estudiantes[i].getPuntaje() + "--" + estudiantes[i].getApoyo());
+        }
+        System.out.println();
     }
 }

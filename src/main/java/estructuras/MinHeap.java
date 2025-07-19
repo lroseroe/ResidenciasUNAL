@@ -1,6 +1,6 @@
 package estructuras;
 
-//el llamado minHeap.insert(estudiante);
+import java.util.Arrays;
 
 public class MinHeap{
     Estudiante[] estudiantesArray;
@@ -74,16 +74,13 @@ public class MinHeap{
         
         while(size>0){
             Estudiante min = estudiantesArray[0];
+            swap(0,size-1);
+            size--;               
+            siftDown(0);
+            
             if(!min.isRemove()){
-                swap(0, size-1);
-                size--;
-                siftDown(0);
                 return min;
-            }else{
-                swap(0, size-1);
-                size--;
-                siftDown(0);
-            }
+            }          
         }
 
         return null;
@@ -97,17 +94,6 @@ public class MinHeap{
 
         estudiantesArray[i].setRemove();
     }
-    
-    /*
-    public int findIndex(Estudiante estudiante){
-        for(int i=0; i<size; i++){
-            if(estudiantesArray[i].equals(estudiante)){
-                return i;
-            }
-        }
-        return -1;
-    }
-    */
     
     public void changePriority(Estudiante estudiante, int nuevoPuntaje){
         int index = estudiante.getHeapIndex();
@@ -126,10 +112,10 @@ public class MinHeap{
         }
     }
 
-    public Estudiante[] array(){
-        Estudiante[] result = new Estudiante[size];
-        System.arraycopy(estudiantesArray, 0, result, 0, size);
-        return result;
+    public Estudiante[] filtrarEstudiantes() {
+        return Arrays.stream(estudiantesArray)
+                .filter(e -> e != null && !e.isRemove())
+                .toArray(Estudiante[]::new);
     }
     
     public void printHeap(){

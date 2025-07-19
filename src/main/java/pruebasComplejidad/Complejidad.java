@@ -27,13 +27,13 @@ public class Complejidad {
 
     public static void main(String[] args) {
         final int start = 10;
-        final int end = 1000; //Poner la cantidad de datos a probar segun la preferencia
+        final int end = 1000000; //Poner la cantidad de datos a probar segun la preferencia
      
         System.out.println("===== MinHeap =====");
         for(int size = start; size<=end;size*=10){
             MinHeap minHeap = new MinHeap(size);
             Estudiante estudiantePrueba1 = new Estudiante(1012574489, "David Herrera", 50);
-
+  
             System.out.println("=== Tamaño de prueba: " + size + " ===");
             
             exec(size, "MinHeap - insert", _-> minHeap.insert(estudiantePrueba1));
@@ -53,7 +53,7 @@ public class Complejidad {
                 minHeap.insert(estudiantePrueba1);
             }
 
-            HeapSort heapSort = new HeapSort(minHeap.array());
+            HeapSort heapSort = new HeapSort(minHeap.filtrarEstudiantes());
             System.out.println("=== Tamaño de prueba: " + size + " ===");
 
             exec(size, "HeapSort", _-> heapSort.heapSort());
