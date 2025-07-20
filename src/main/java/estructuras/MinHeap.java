@@ -117,6 +117,10 @@ public class MinHeap{
                 .filter(e -> e != null && !e.isRemove())
                 .toArray(Estudiante[]::new);
     }
+
+    public Estudiante[] getEstudiantesArray(){
+        return estudiantesArray;
+    }
     
     public void printHeap(){
         for (int i = 0; i < size; ++i) {
