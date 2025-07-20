@@ -1,5 +1,8 @@
 package main;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 public class Main {
@@ -9,6 +12,7 @@ public class Main {
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         ventana.setResizable(false);
         ventana.setTitle("Sistema de Residencias");
+        new Main().setIcon();
         
         MainPanel panel = new MainPanel();
         ventana.add(panel);
@@ -17,6 +21,17 @@ public class Main {
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
        
+    }
+    
+    public void setIcon(){
+        BufferedImage icon;
+        try {
+            icon = ImageIO.read(getClass().getResourceAsStream("/university.png"));
+            ventana.setIconImage(icon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
     }
 }
 
