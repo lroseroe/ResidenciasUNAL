@@ -2,9 +2,12 @@ package residenciasunalhash;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -112,7 +115,11 @@ public class MyHashMap {
     }
     
      public void guardarComoCSV(String nombreArchivo) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+        try (BufferedWriter writer = new BufferedWriter(
+             new OutputStreamWriter(new FileOutputStream(nombreArchivo), StandardCharsets.UTF_8))) {
+            
+            //writer.write('\uFEFF');
+
             for (int i = 0; i < SIZE; i++) {
                 HashNode current = table[i];
                 while (current != null) {

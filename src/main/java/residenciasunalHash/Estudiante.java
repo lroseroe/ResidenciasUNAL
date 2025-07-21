@@ -8,6 +8,7 @@ package residenciasunalhash;
  *
  * @author Jthom
  */
+import java.io.File;
 import java.util.Scanner;
 
 
@@ -86,7 +87,10 @@ public class Estudiante{
     public static Estudiante fromCSV(String linea) {
         String[] partes = linea.split(",", -1);
         if (partes.length < 4) return null;
-
+        
+        System.out.println("Encriptado: " + partes[0]);
+        System.out.println("Desencriptadooo: " + CriptoCode.desencriptar(partes[0]));
+        
         long id = Long.parseLong(CriptoCode.desencriptar(partes[0]));
         String nombre = CriptoCode.desencriptar(partes[1]).replace(";", ",");
         int puntaje = Integer.parseInt(CriptoCode.desencriptar(partes[2]));

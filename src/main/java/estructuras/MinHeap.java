@@ -92,16 +92,7 @@ public class MinHeap{
             throw new RuntimeException("El estudiante no se encuentra registrado."); 
         }
         
-        swap(i, size - 1);
-        indexMap.remove(estudiantesArray[size - 1]);
-        estudiantesArray[size - 1].setRemove();
-        estudiantesArray[size - 1] = null;
-        size--;
-
-        if (i < size) {
-            siftUp(i);
-            siftDown(i);
-        }
+        estudiantesArray[i].setRemove();
     }
     
     public void changePriority(Estudiante estudiante, int nuevoPuntaje){

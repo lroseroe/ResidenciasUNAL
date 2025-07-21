@@ -3,8 +3,12 @@ package main;
 import estructuras.HeapSort;
 import estructuras.MinHeap;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import residenciasunalhash.Estudiante;
 import residenciasunalhash.ResidenciasUnalHash;
 
@@ -28,6 +32,7 @@ public class SystemControl {
         heapSort = new HeapSort(heap.getEstudiantesArray(), panel);
         
         //Iniciar datos
+        System.out.println("Guardando en: " + new File("estudiantes").getAbsolutePath());
         cargarDesdeCSV("estudiantes");
         panel.config.cargarConfig();
     }
@@ -103,7 +108,8 @@ public class SystemControl {
     
     // Importar estudiantes desde un archivo CSV
     public void cargarDesdeCSV(String nombreArchivo) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+        try(BufferedReader reader = new BufferedReader(
+            new InputStreamReader(new FileInputStream(nombreArchivo), StandardCharsets.UTF_8));){
             String linea;
             while ((linea = reader.readLine()) != null) {
                 Estudiante est = Estudiante.fromCSV(linea);

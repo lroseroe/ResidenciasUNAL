@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+import residenciasunalhash.CriptoCode;
 
 public class Main {
     public static JFrame ventana = new JFrame();
@@ -20,7 +21,7 @@ public class Main {
         ventana.pack();
         ventana.setLocationRelativeTo(null);
         ventana.setVisible(true);
-       
+        
     }
     
     public void setIcon(){
